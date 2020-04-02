@@ -1,15 +1,23 @@
+from typing import Tuple
 from random import random
+from python.src.environments.Environment import Environment
 
 
-class DoubleCoinFlip:
-    """Class models a double coin flip. Returns 1, if the """
+class DoubleCoinFlip(Environment):
+    """Class models a double coin flip."""
 
     def __init__(self):
-        pass
+        super().__init__()
 
-    def flip(self, prediction):
-        outcome = random.randint(0, 1) + random.randint(0, 1)
-        if prediction == outcome:
-            return 1
+    def calculate_percept(self, prediction: Tuple[int, int, int, int]) \
+            -> Tuple[Tuple[int, int, int, int], Tuple[int, int, int, int]]:
+        """Takes a prediction, throws two coins and returns observation and reward
+        The returned percept is built as follows:
+        (observation bits, (Sign, 1, 1/2, 1_4)
+        """
+        outcome_one = random.randint(0, 1)
+        outcome_two = random.randint(0, 1)
+        if prediction[0] + prediction[1] == outcome_one + outcome_two:
+            return (outcome_one, outcome_two, 0, 0), (0, 1, 0, 0)
         else:
-            return 0
+            return (outcome_one, outcome_two, 0, 0), (0, 0, 0, 0)
