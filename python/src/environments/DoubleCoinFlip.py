@@ -1,5 +1,5 @@
 from typing import Tuple
-from random import random
+import random
 from python.src.environments.Environment import Environment
 
 
@@ -13,8 +13,7 @@ class DoubleCoinFlip(Environment):
             -> Tuple[Tuple[int, int, int, int], Tuple[int, int, int, int]]:
         """Takes a prediction, throws two coins and returns observation and reward
         The returned percept is built as follows:
-        (observation bits, (Sign, 1, 1/2, 1_4)
-        """
+        (observation bits, reward bits(Sign, 1, 1/2, 1/4))"""
         outcome_one = random.randint(0, 1)
         outcome_two = random.randint(0, 1)
         if prediction[0] + prediction[1] == outcome_one + outcome_two:
