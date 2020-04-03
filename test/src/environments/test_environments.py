@@ -1,23 +1,14 @@
 import pytest
-
-from python.src.environments.Slide import Slide
 from python.src.environments.BiasedCoinFlip import BiasedCoinFlip
-from python.src.environments.BiasedCoinFlipReversed import BiasedCoinFlipReversed
 from python.src.environments.DoubleCoinFlip import DoubleCoinFlip
-from python.src.environments.DoubleCoinFlipReversed import DoubleCoinFlipReversed
+from python.src.environments.Slide import Slide
 
 
 # fixture method sets up for the tests
-from python.src.environments.SlideReversed import SlideReversed
-
-
 @pytest.fixture(scope="class", params=[
     BiasedCoinFlip,
-    BiasedCoinFlipReversed,
     DoubleCoinFlip,
-    DoubleCoinFlipReversed,
     Slide,
-    SlideReversed
 ])
 def environments(request):
     """Returns all sensors sequentially"""

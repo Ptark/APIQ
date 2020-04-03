@@ -19,6 +19,6 @@ class BiasedCoinFlip(Environment):
         else:
             outcome = 0
         if prediction[0] == outcome:
-            return (outcome, 0, 0, 0), (0, 1, 0, 0)
+            return (outcome, 0, 0, 0), (1, 0, 0, 0)
         else:
             return (outcome, 0, 0, 0), (0, 0, 0, 0)

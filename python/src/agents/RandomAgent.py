@@ -13,5 +13,4 @@ class RandomAgent(Agent):
     def calculate_action(self, percept: Tuple[Tuple[int, int, int, int], Tuple[int, int, int, int]]) \
             -> Tuple[int, int, int, int]:
         """returns a random action"""
-        return random.randint(0, 1), random.randint(0, 1),\
-               random.randint(0, 1), random.randint(0, 1)
+        return random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)

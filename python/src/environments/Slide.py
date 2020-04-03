@@ -20,5 +20,5 @@ class Slide(Environment):
                 return (1, 0, 0, 0), (0, 0, 0, 0)
         else:
             self.at_bottom = True
-            return (0, 0, 0, 0), (0, 1, 0, 0)
+            return (0, 0, 0, 0), (1, 0, 0, 0)
 
