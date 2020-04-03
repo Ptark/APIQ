@@ -7,7 +7,7 @@ class Environment(ABC):
 
     @abstractmethod
     def __init__(self):
-        pass
+        self.turns = 1
 
     @abstractmethod
     def calculate_percept(self, action: Tuple[int, int, int, int]) \

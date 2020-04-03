@@ -1,5 +1,3 @@
-from typing import Tuple
-
 import pytest
 
 from python.src.agents.RandomAgent import RandomAgent
