@@ -4,7 +4,7 @@ import random
 from python.src.environments.Environment import Environment
 
 
-class BiasedCoinFlip(Environment):
+class BiasedCoinFlipReversed(Environment):
     """Class models a biased 30% coin flip."""
 
     def __init__(self):
@@ -19,6 +19,6 @@ class BiasedCoinFlip(Environment):
         else:
             outcome = 0
         if prediction[0] == outcome:
-            return (outcome, 0, 0, 0), (0, 1, 0, 0)
+            return (outcome, 0, 0, 0), (1, 0, 0, 0)
         else:
-            return (outcome, 0, 0, 0), (0, 0, 0, 0)
+            return (outcome, 0, 0, 0), (1, 1, 0, 0)

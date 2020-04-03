@@ -5,7 +5,7 @@ import random
 from python.src.environments.Environment import Environment
 
 
-class DoubleCoinFlip(Environment):
+class DoubleCoinFlipReversed(Environment):
     """Class models a double coin flip."""
 
     def __init__(self):
@@ -19,7 +19,7 @@ class DoubleCoinFlip(Environment):
         outcome_one = random.randint(0, 1)
         outcome_two = random.randint(0, 1)
         if prediction[0] + prediction[1] == outcome_one + outcome_two:
-            return (outcome_one, outcome_two, 0, 0), (0, 1, 0, 0)
+            return (outcome_one, outcome_two, 0, 0), (1, 0, 0, 0)
         else:
-            return (outcome_one, outcome_two, 0, 0), (0, 0, 0, 0)
+            return (outcome_one, outcome_two, 0, 0), (1, 1, 0, 0)
 
