@@ -9,6 +9,7 @@ class BiasedCoinFlip(Environment):
 
     def __init__(self):
         super().__init__()
+        self.idx = (0, 0, 0, 0)
 
     def calculate_percept(self, prediction: Tuple[int, int, int, int]) \
             -> Tuple[Tuple[int, int, int, int], Tuple[int, int, int, int]]:

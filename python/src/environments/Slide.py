@@ -8,6 +8,7 @@ class Slide(Environment):
         self.at_bottom = True
         super().__init__()
         self.turns = 2
+        self.idx = (0, 1, 0, 0)
 
     def calculate_percept(self, action: Tuple[int, int, int, int]) \
             -> Tuple[Tuple[int, int, int, int], Tuple[int, int, int, int]]:
