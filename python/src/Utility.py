@@ -3,6 +3,7 @@ import time
 from typing import List
 
 from python.src.agents.Agent import Agent
+from python.src.agents.HandcraftedAgent import HandcraftedAgent
 from python.src.agents.RandomAgent import RandomAgent
 from python.src.environments.BiasedCoinFlip import BiasedCoinFlip
 from python.src.environments.DoubleCoinFlip import DoubleCoinFlip
@@ -37,7 +38,10 @@ def get_random_bit():
 
 def agents() -> List[Agent]:
     """Initialize and return a list of agents"""
-    return [RandomAgent()]
+    return [
+        RandomAgent(),
+        HandcraftedAgent()
+    ]
 
 
 def environments() -> List[Environment]:

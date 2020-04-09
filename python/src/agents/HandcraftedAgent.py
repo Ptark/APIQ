@@ -4,7 +4,7 @@ import random
 from python.src.agents.Agent import Agent
 
 
-class RandomAgent(Agent):
+class HandcraftedAgent(Agent):
     """Models an agent which takes handcrafted actions depending on environments"""
 
     def __init__(self):

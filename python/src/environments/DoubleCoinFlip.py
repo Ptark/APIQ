@@ -10,17 +10,14 @@ class DoubleCoinFlip(Environment):
 
     def __init__(self):
         super().__init__()
-        self.idx = (1, 0, 0, 0)
+        self.idx = "1"
 
-    def calculate_percept(self, prediction: Tuple[int, int, int, int]) \
-            -> Tuple[Tuple[int, int, int, int], Tuple[int, int, int, int]]:
-        """Takes a prediction, throws two coins and returns observation and reward
-        The returned percept is built as follows:
-        (observation bits, reward bits(Sign, 1, 1/2, 1/4))"""
+    def calculate_percept(self, prediction: str) -> Tuple[str, str]:
+        """Takes a prediction, throws two coins and returns observation and reward"""
         outcome_one = random.randint(0, 1)
         outcome_two = random.randint(0, 1)
-        if prediction[0] + prediction[1] == outcome_one + outcome_two:
-            return (outcome_one, outcome_two, 0, 0), (1, 0, 0, 0)
+        if int(prediction[0]) + int(prediction[1]) == outcome_one + outcome_two:
+            return str(outcome_two) + str(outcome_one), "1"
         else:
-            return (outcome_one, outcome_two, 0, 0), (0, 0, 0, 0)
+            return str(outcome_two) + str(outcome_one), "0"
 

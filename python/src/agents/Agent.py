@@ -10,8 +10,7 @@ class Agent(ABC):
         pass
 
     @abstractmethod
-    def calculate_action(self, percept: Tuple[Tuple[int, int, int, int], Tuple[int, int, int, int]])\
-            -> Tuple[int, int, int, int]:
+    def calculate_action(self, percept: Tuple[str, str]) -> str:
         """To be implemented by child classes
         returns an action which is a tuple with 4 bits/integers"""
         pass

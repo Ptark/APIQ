@@ -42,20 +42,18 @@ def evaluate_agent(agent: Agent, number_of_evaluations: int, scaling_factors: Li
     return agent_dict
 
 
-def evaluate_agent_in_environment(ag: Agent, env: Environment, num_eval: int, sign: int) -> float:
+def evaluate_agent_in_environment(agent: Agent, environment: Environment, number_of_evaluations: int, sign: int) -> float:
     """Evaluate a given agent in the given environment a given number of times
     Return: Arithmetic mean of earned reward
     """
     total_reward = 0
-    for i in range(num_eval):
+    for i in range(number_of_evaluations):
         reward = 0
-        percept = (env.idx, sign)
-        for turns in range(env.turns):
-            action = ag.calculate_action(percept)
-            percept = env.calculate_percept(action)
-            count = 0
-            for x in percept[1]:
-                reward += x * pow(0.5, count)
-                count += 1
+        percept = (environment.idx, sign)
+        for turns in range(environment.turns):
+            action = agent.calculate_action(percept)
+            percept = environment.calculate_percept(action)
+            for idx in range(len(percept[1])):
+                reward += int(percept[1][idx]) * pow(0.5, idx)
         total_reward += sign * reward
-    return total_reward / num_eval
+    return total_reward / number_of_evaluations
