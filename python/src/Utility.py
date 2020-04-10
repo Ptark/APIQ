@@ -1,8 +1,6 @@
 import dis
 import time
-from typing import List
 
-from python.src.agents.Agent import Agent
 from python.src.agents.HandcraftedAgent import HandcraftedAgent
 from python.src.agents.RandomAgent import RandomAgent
 from python.src.environments.BiasedCoinFlip import BiasedCoinFlip

@@ -1,20 +1,20 @@
-from typing import List, Tuple
+from typing import List, Tuple, Type
 
 from python.src import Utility
 from python.src.agents.Agent import Agent
 from python.src.environments.Environment import Environment
 
 
-def apiq_scores(number_of_evaluations: int) -> List:
+def apiq(number_of_evaluations: int) -> List:
     """calculate APIQ scores for all agents and accumulate results in a dictionary"""
-    apiq = []
+    apiq_dict = []
     agents = Utility.agents()
     for agent in agents:
-        apiq.append(agent_apiq(agent, number_of_evaluations))
-    return apiq
+        apiq_dict.append(apiq_agent(agent, number_of_evaluations))
+    return apiq_dict
 
 
-def agent_apiq(agent, number_of_evaluations):
+def apiq_agent(agent, number_of_evaluations):
     """calculate APIQ for an agent and accumulate results in a dictionary"""
     environments = Utility.environments()
     scaling_factors = [Utility.get_scaling_factor(environment()) for environment in environments]
@@ -25,8 +25,8 @@ def agent_apiq(agent, number_of_evaluations):
         "environment_scores": []
     }
     for idx in range(len(environments)):
-        reward_positive = evaluate_agent_environment((agent(), environments[idx]()), number_of_evaluations, "0")
-        reward_negative = evaluate_agent_environment((agent(), environments[idx]()), number_of_evaluations, "1")
+        reward_positive = reward_agent_environment(agent, environments[idx], number_of_evaluations, "0")
+        reward_negative = reward_agent_environment(agent, environments[idx], number_of_evaluations, "1")
         counter += (reward_positive + reward_negative) * scaling_factors[idx]
         denominator += scaling_factors[idx]
         environment_dict = {
@@ -39,16 +39,16 @@ def agent_apiq(agent, number_of_evaluations):
     return agent_dict
 
 
-def evaluate_agent_environment(agent_environment_pair: Tuple[Agent, Environment], number_of_evaluations: int,
-                               sign_bit: str) -> float:
+def reward_agent_environment(agent_class: Type[Agent], environment_class: Type[Environment], number_of_evaluations: int,
+                             sign_bit: str) -> float:
     """Evaluate the reward an agent earns on average in an environment"""
     total_reward = 0
-    agent = agent_environment_pair[0]
-    environment = agent_environment_pair[1]
     for i in range(number_of_evaluations):
+        agent = agent_class()
+        environment = environment_class()
         reward = 0
-        percept = (str(agent.idx), sign_bit)
-        for turns in range(environment.turns):
+        percept = (str(environment.idx), sign_bit)
+        for turns in range(environment.number_of_turns):
             action = agent.calculate_action(percept)
             percept = environment.calculate_percept(action)
             for idx in range(len(percept[1])):

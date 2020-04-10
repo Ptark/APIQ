@@ -7,8 +7,8 @@ class Environment(ABC):
 
     @abstractmethod
     def __init__(self):
-        self.turns = 1
-        self.idx = 0
+        self.number_of_turns = 1
+        self.idx = "0"
 
     @abstractmethod
     def calculate_percept(self, action: str) \
