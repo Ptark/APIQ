@@ -1,59 +1,53 @@
-from typing import List
+from typing import List, Tuple
 
 from python.src import Utility
 from python.src.agents.Agent import Agent
 from python.src.environments.Environment import Environment
 
 
-def calculate_apiq_scores(number_of_evaluations: int) -> List:
+def apiq_scores(number_of_evaluations: int) -> List:
     """calculate APIQ scores for all agents and accumulate results in a dictionary"""
-    apiq_scores = []
-    agents = Utility.agents()  # list of agents
-    # calculate complexity scaling factors
-    scaling_factors = [Utility.get_scaling_factor(env) for env in Utility.environments()]
-    for agent in agents:  # loop for evaluating all agents
-        apiq_scores.append(evaluate_agent(agent, number_of_evaluations, scaling_factors))
-    return apiq_scores
-
-
-def evaluate_agent(agent: Agent, number_of_evaluations: int, scaling_factors: List[float]) -> dict:
-    """evaluate an agents APIQ"""
-    environments = Utility.environments()     # initialize list of environments
-    counter = 0
-    denominator = 0
-    idx = 0
-    agent_dict = {
-        "name": type(agent).__name__,
-        "environment_scores": []
-    }
-    for environment in environments:  # loop for evaluating agent in all environments
-        positive_score = evaluate_agent_in_environment(agent, environment, number_of_evaluations, 1)
-        negative_score = evaluate_agent_in_environment(agent, environment, number_of_evaluations, -1)
-        counter += (positive_score + negative_score) * scaling_factors[idx]
-        denominator += 2 * scaling_factors[idx]
-        idx += 1
-        environment_dict = {
-            "name": type(environment).__name__,
-            "positive_score": positive_score,
-            "negative_score": negative_score
+    apiq = []
+    agents = Utility.agents()
+    environments = Utility.environments()
+    scaling_factors = [Utility.get_scaling_factor(environment()) for environment in environments]
+    for agent in agents:
+        counter = 0
+        denominator = 0
+        agent_dict = {
+            "name": agent.__name__,
+            "environment_scores": []
         }
-        agent_dict["environment_scores"].append(environment_dict)
-    agent_dict["apiq"] = counter / denominator
-    return agent_dict
+        for idx in range(len(environments)):
+            reward_positive = evaluate_agent_environment((agent(), environments[idx]()), number_of_evaluations, "0")
+            reward_negative = evaluate_agent_environment((agent(), environments[idx]()), number_of_evaluations, "1")
+            counter += (reward_positive + reward_negative) * scaling_factors[idx]
+            denominator += scaling_factors[idx]
+            environment_dict = {
+                "name": environments[idx].__name__,
+                "reward_positive": reward_positive,
+                "reward_negative": reward_negative
+            }
+            agent_dict["environment_scores"].append(environment_dict)
+        agent_dict["apiq"] = counter / denominator
+        apiq.append(agent_dict)
+    return apiq
 
 
-def evaluate_agent_in_environment(agent: Agent, environment: Environment, number_of_evaluations: int, sign: int) -> float:
-    """Evaluate a given agent in the given environment a given number of times
-    Return: Arithmetic mean of earned reward
-    """
+def evaluate_agent_environment(agent_environment_pair: Tuple[Agent, Environment], number_of_evaluations: int,
+                               sign_bit: str) -> float:
+    """Evaluate the reward an agent earns on average in an environment"""
     total_reward = 0
+    agent = agent_environment_pair[0]
+    environment = agent_environment_pair[1]
     for i in range(number_of_evaluations):
         reward = 0
-        percept = (environment.idx, sign)
+        percept = (str(agent.idx), sign_bit)
         for turns in range(environment.turns):
             action = agent.calculate_action(percept)
             percept = environment.calculate_percept(action)
             for idx in range(len(percept[1])):
                 reward += int(percept[1][idx]) * pow(0.5, idx)
+        sign = 1 if sign_bit == "0" else -1
         total_reward += sign * reward
     return total_reward / number_of_evaluations

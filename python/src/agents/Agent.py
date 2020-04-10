@@ -7,7 +7,9 @@ class Agent(ABC):
 
     @abstractmethod
     def __init__(self):
-        pass
+        self.idx = 0
+        self.sign = 1
+        self.turn = 0
 
     @abstractmethod
     def calculate_action(self, percept: Tuple[str, str]) -> str:

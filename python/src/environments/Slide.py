@@ -21,6 +21,9 @@ class Slide(Environment):
                 self.at_top = True
                 return "1", "0"
         else:
-            self.at_top = False
-            return "0", "1"
+            if action[0] == "0":
+                return "1", "0"
+            else:
+                self.at_top = False
+                return "0", "1"
 

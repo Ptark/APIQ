@@ -16,7 +16,7 @@ class DoubleCoinFlip(Environment):
         """Takes a prediction, throws two coins and returns observation and reward"""
         outcome_one = random.randint(0, 1)
         outcome_two = random.randint(0, 1)
-        if int(prediction[0]) + int(prediction[1]) == outcome_one + outcome_two:
+        if int(prediction[0]) == outcome_one + outcome_two:
             return str(outcome_two) + str(outcome_one), "1"
         else:
             return str(outcome_two) + str(outcome_one), "0"
