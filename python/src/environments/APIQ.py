@@ -9,29 +9,34 @@ def apiq_scores(number_of_evaluations: int) -> List:
     """calculate APIQ scores for all agents and accumulate results in a dictionary"""
     apiq = []
     agents = Utility.agents()
+    for agent in agents:
+        apiq.append(agent_apiq(agent, number_of_evaluations))
+    return apiq
+
+
+def agent_apiq(agent, number_of_evaluations):
+    """calculate APIQ for an agent and accumulate results in a dictionary"""
     environments = Utility.environments()
     scaling_factors = [Utility.get_scaling_factor(environment()) for environment in environments]
-    for agent in agents:
-        counter = 0
-        denominator = 0
-        agent_dict = {
-            "name": agent.__name__,
-            "environment_scores": []
+    counter = 0
+    denominator = 0
+    agent_dict = {
+        "name": agent.__name__,
+        "environment_scores": []
+    }
+    for idx in range(len(environments)):
+        reward_positive = evaluate_agent_environment((agent(), environments[idx]()), number_of_evaluations, "0")
+        reward_negative = evaluate_agent_environment((agent(), environments[idx]()), number_of_evaluations, "1")
+        counter += (reward_positive + reward_negative) * scaling_factors[idx]
+        denominator += scaling_factors[idx]
+        environment_dict = {
+            "name": environments[idx].__name__,
+            "reward_positive": reward_positive,
+            "reward_negative": reward_negative
         }
-        for idx in range(len(environments)):
-            reward_positive = evaluate_agent_environment((agent(), environments[idx]()), number_of_evaluations, "0")
-            reward_negative = evaluate_agent_environment((agent(), environments[idx]()), number_of_evaluations, "1")
-            counter += (reward_positive + reward_negative) * scaling_factors[idx]
-            denominator += scaling_factors[idx]
-            environment_dict = {
-                "name": environments[idx].__name__,
-                "reward_positive": reward_positive,
-                "reward_negative": reward_negative
-            }
-            agent_dict["environment_scores"].append(environment_dict)
-        agent_dict["apiq"] = counter / denominator
-        apiq.append(agent_dict)
-    return apiq
+        agent_dict["environment_scores"].append(environment_dict)
+    agent_dict["apiq"] = counter / denominator
+    return agent_dict
 
 
 def evaluate_agent_environment(agent_environment_pair: Tuple[Agent, Environment], number_of_evaluations: int,
