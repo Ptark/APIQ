@@ -16,6 +16,8 @@ def environments(request):
 
 
 def test_calculate_percept(environments):
-    percept = environments.calculate_percept((0, 0, 0, 0))
-    assert len(percept) == 2
+    """Test if calculate_percept returns a tuple with 2 strings"""
+    percept = environments.calculate_percept("0")
+    assert isinstance(percept[0], str)
+    assert isinstance(percept[1], str)
 
