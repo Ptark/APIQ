@@ -16,22 +16,24 @@ def get_scaling_factor(environment: Environment, randomness: bool = False) -> fl
 
 def environment_complexity(environment: Environment, randomness: bool = False) -> int:
     """Estimate complexity of an environment depending on its main method and use of random"""
+    randomness_complexity = 336
     complexity = method_complexity(environment.calculate_percept)
     if randomness:
-        complexity += method_complexity(get_random_bit())
+        complexity += randomness_complexity
     return complexity
 
 
 def method_complexity(method) -> int:
     """Estimate complexity of a method by counting bytecode instructions"""
+    bits_per_instruction = 16
     bytecode = dis.Bytecode(method).dis()
-    return len([line for line in bytecode.splitlines() if line]) * 2
+    return len([line for line in bytecode.splitlines() if line]) * bits_per_instruction
 
 
 def get_random_bit():
     """Returns a pseudorandom bit from a timestamp"""
     seed = time.time()
-    return pow(2, int(str(seed).replace('.', ''))) % 3 % 2
+    return pow(2, int(str(seed).replace('.', '')[-5:]))
 
 
 def agents():

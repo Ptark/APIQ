@@ -10,6 +10,7 @@ class BiasedCoinFlip(Environment):
     def __init__(self):
         super().__init__()
         self.idx = "0"
+        self.randomness = True
 
     def calculate_percept(self, prediction: str) -> Tuple[str, str]:
         """Takes a prediction, throws a coin with 30% chance for heads (0) and returns observation and reward"""

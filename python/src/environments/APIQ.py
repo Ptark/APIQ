@@ -1,8 +1,19 @@
-from typing import List, Tuple, Type
-
+from typing import List, Type
 from python.src import Utility
 from python.src.agents.Agent import Agent
 from python.src.environments.Environment import Environment
+
+
+def complexity() -> List:
+    """Return a dictionary which holds all environments and their complexity"""
+    complexity_dict = []
+    for environment in Utility.environments():
+        env = environment()
+        complexity_dict.append({
+            "name": environment.__name__,
+            "complexity": Utility.environment_complexity(env, env.randomness)
+        })
+    return complexity_dict
 
 
 def apiq(number_of_evaluations: int) -> List:
@@ -17,7 +28,7 @@ def apiq(number_of_evaluations: int) -> List:
 def apiq_agent(agent, number_of_evaluations):
     """calculate APIQ for an agent and accumulate results in a dictionary"""
     environments = Utility.environments()
-    scaling_factors = [Utility.get_scaling_factor(environment()) for environment in environments]
+    scaling_factors = [Utility.get_scaling_factor(env(), env().randomness) for env in environments]
     counter = 0
     denominator = 0
     agent_dict = {
