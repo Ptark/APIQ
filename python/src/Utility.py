@@ -20,7 +20,10 @@ def get_scaling_factor(environment: Environment, randomness: bool = False) -> fl
 
 
 def environment_complexity(environment: Environment, randomness: bool = False) -> float:
-    """Estimate complexity of an environment depending on its main method and use of random"""
+    """Estimate complexity of an environment depending on its calculate_action method and use of random.
+    Complexity is measured in bytecode instructions.
+    One instruction has 2 byte.
+    """
     complexity = method_complexity(environment.calculate_percept)
     if randomness:
         complexity += randomness_complexity
@@ -29,7 +32,6 @@ def environment_complexity(environment: Environment, randomness: bool = False) -
 
 def method_complexity(method: Callable) -> float:
     """Estimate complexity of a method by counting bytecode instructions"""
-    # bits per instruction = 16
     bytecode = dis.Bytecode(method).dis()
     return len([line for line in bytecode.splitlines() if line])
 
