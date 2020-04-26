@@ -19,45 +19,47 @@ class HandcraftedAgent(Agent):
             "1": self.double_coin_flip_reversed,
             "2": self.slide_reversed
         }
+        self.environment_solver = None
 
     def calculate_action(self, percept: Tuple[str, str]) -> str:
         """Returns handcrafted actions depending on the environment"""
         if self.turn_counter == 0:
             self.idx = percept[0]
-            self.sign = percept[1]
-        if self.sign == "0":
-            action = self.environment_switch.get(self.idx)(percept)
-        else:
-            action = self.environment_reversed_switch.get(self.idx)(percept)
+            sign = percept[1]
+            if sign == "0":
+                self.environment_solver = self.environment_switch.get(self.idx)
+            else:
+                self.environment_solver = self.environment_reversed_switch.get(self.idx)
+        action = self.environment_solver(percept)
         self.turn_counter += 1
         return action
 
-    def biased_coin_flip(self, percept):
+    def biased_coin_flip(self, percept: Tuple[str, str]):
         """Returns optimal actions for the biased coin flip"""
-        return "1"
+        return "0001"
 
-    def biased_coin_flip_reversed(self, percept):
+    def biased_coin_flip_reversed(self, percept: Tuple[str, str]):
         """Returns optimal actions for the reversed biased coin flip"""
-        return "0"
+        return "0000"
 
-    def double_coin_flip(self, percept):
+    def double_coin_flip(self, percept: Tuple[str, str]):
         """Returns optimal actions for the double coin flip"""
-        return "01"
+        return "0001"
 
-    def double_coin_flip_reversed(self, percept):
+    def double_coin_flip_reversed(self, percept: Tuple[str, str]):
         """Returns optimal actions for the double coin flip"""
-        return "00"
+        return "0000"
 
-    def slide(self, percept):
+    def slide(self, percept: Tuple[str, str]):
         """Returns optimal actions for the slide"""
         if self.turn_counter == 0:
-            return "1"
+            return "0001"
         else:
-            return "1"
+            return "0001"
 
-    def slide_reversed(self, percept):
+    def slide_reversed(self, percept: Tuple[str, str]):
         """Returns optimal actions for the slide"""
         if self.turn_counter == 0:
-            return "1"
+            return "0001"
         else:
-            return "0"
+            return "0000"

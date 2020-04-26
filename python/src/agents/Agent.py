@@ -14,5 +14,5 @@ class Agent(ABC):
     @abstractmethod
     def calculate_action(self, percept: Tuple[str, str]) -> str:
         """To be implemented by child classes
-        returns an action which is a tuple with 4 bits/integers"""
+        returns an action as a string of 0s and 1s"""
         pass

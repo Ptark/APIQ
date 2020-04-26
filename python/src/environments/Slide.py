@@ -15,15 +15,15 @@ class Slide(Environment):
         """Returns a reward of 1/8 + 1/8 if staying at the bottom and 1 if
         climbing up and sliding down"""
         if self.at_top is False:
-            if action[0] == "0":
-                return "0", "0001"
+            if action[-1] == "0":
+                return "0000", "0001"
             else:
                 self.at_top = True
-                return "1", "0"
+                return "0001", "0000"
         else:
-            if action[0] == "0":
-                return "1", "0"
+            if action[-1] == "0":
+                return "0001", "0000"
             else:
                 self.at_top = False
-                return "0", "1"
+                return "0000", "1000"
 

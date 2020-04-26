@@ -25,7 +25,7 @@ def apiq(number_of_evaluations: int) -> List:
     return apiq_dict
 
 
-def apiq_agent(agent, number_of_evaluations):
+def apiq_agent(agent: Type[Agent], number_of_evaluations):
     """calculate APIQ for an agent and accumulate results in a dictionary"""
     environments = Utility.environments()
     scaling_factors = [Utility.get_scaling_factor(env(), env().randomness) for env in environments]
@@ -55,8 +55,8 @@ def reward_agent_environment(agent_class: Type[Agent], environment_class: Type[E
     """Evaluate the reward an agent earns on average in an environment"""
     total_reward = 0
     for i in range(number_of_evaluations):
-        agent = agent_class()
         environment = environment_class()
+        agent = agent_class()
         reward = 0
         percept = (str(environment.idx), sign_bit)
         for turns in range(environment.number_of_turns):

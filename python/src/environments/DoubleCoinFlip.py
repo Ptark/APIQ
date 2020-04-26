@@ -18,11 +18,10 @@ class DoubleCoinFlip(Environment):
         outcome_one = random.randint(0, 1)
         outcome_two = random.randint(0, 1)
         prediction = 0
-        length = 2 if 2 <= len(action) else 1
-        for idx in range(length):
-            prediction += int(action[idx])
+        prediction += int(action[-1])
+        prediction += int(action[-2])
         if prediction == outcome_one + outcome_two:
-            return str(outcome_two) + str(outcome_one), "1"
+            return "00" + str(outcome_two) + str(outcome_one), "1000"
         else:
-            return str(outcome_two) + str(outcome_one), "0"
+            return "00" + str(outcome_two) + str(outcome_one), "0000"
 

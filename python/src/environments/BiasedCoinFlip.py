@@ -20,6 +20,6 @@ class BiasedCoinFlip(Environment):
         else:
             outcome = 0
         if int(prediction[-1]) == outcome:
-            return str(outcome), "1"
+            return "000" + str(outcome), "1000"
         else:
-            return str(outcome), "0"
+            return "000" + str(outcome), "0000"
