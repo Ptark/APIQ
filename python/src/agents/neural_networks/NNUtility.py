@@ -24,3 +24,16 @@ def relu(x):
 def drelu(x):
     """Derivative of relu activation function"""
     return (x > 0) * 1
+
+
+def str_to_narray(s):
+    """Turn a bitstring into a numpy array neural network input"""
+    return np.fromstring(s, float)
+
+
+def narray_to_bitstr(narray):
+    """Turn a numpy array neural network output into a bitstring"""
+    rewardstring = ""
+    for o in narray:
+        rewardstring += "0" if o <= 0.5 else "1"
+    return rewardstring

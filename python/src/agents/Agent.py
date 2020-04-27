@@ -7,8 +7,8 @@ class Agent(ABC):
 
     @abstractmethod
     def __init__(self):
-        self.idx = "0"
-        self.sign = "0"
+        self.idx = 0
+        self.sign = 0
         self.turn_counter = 0
 
     @abstractmethod

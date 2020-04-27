@@ -62,8 +62,7 @@ def reward_agent_environment(agent_class: Type[Agent], environment_class: Type[E
         for turns in range(environment.number_of_turns):
             action = agent.calculate_action(percept)
             percept = environment.calculate_percept(action)
-            for idx in range(len(percept[1])):
-                reward += int(percept[1][idx]) * pow(0.5, idx)
+            reward += Utility.get_reward_from_bitstring(percept[1])
         sign = 1 if sign_bit == "0" else -1
         total_reward += sign * reward
     return total_reward / number_of_evaluations

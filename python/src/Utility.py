@@ -36,6 +36,14 @@ def method_complexity(method: Callable) -> float:
     return len([line for line in bytecode.splitlines() if line])
 
 
+def get_reward_from_bitstring(s: str) -> float:
+    """Calculate reward from bit string"""
+    reward = 0
+    for idx in range(len(s)):
+        reward += int(s[idx]) * pow(0.5, idx)
+    return reward
+
+
 def get_random_bit() -> int:
     """Returns a pseudorandom bit from a timestamp"""
     seed = time.time()
