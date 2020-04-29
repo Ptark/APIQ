@@ -4,11 +4,13 @@ import random
 from python.src.agents.Agent import Agent
 
 
-class RandomAgent(Agent):
+class RandomActions(Agent):
     """Models an agent which takes handcrafted actions depending on environments"""
 
-    def __init__(self):
-        super().__init__()
+    training_steps = 1
+
+    def __init__(self, training_step: int = 0):
+        super().__init__(training_step)
 
     def calculate_action(self, percept: Tuple[str, str]) -> str:
         """Returns handcrafted actions depending on the environment"""

@@ -3,12 +3,14 @@ from typing import Tuple
 from python.src.agents.Agent import Agent
 
 
-class HandcraftedAgent(Agent):
+class Handcrafted(Agent):
     """Models an agent which takes handcrafted actions depending on environments"""
 
-    def __init__(self):
+    training_steps = 1
+
+    def __init__(self, training_step: int = 0):
         """Initiate switch dictionaries for choosing environment appropriate actions"""
-        super().__init__()
+        super().__init__(training_step)
         self.environment_switch = {
             0: self.biased_coin_flip,
             1: self.double_coin_flip,

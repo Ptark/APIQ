@@ -1,3 +1,4 @@
+import pickle
 import numpy as np
 from python.src.agents.neural_networks import NNUtility
 
@@ -76,3 +77,19 @@ class NeuralNetwork:
             current_derivative = current_derivative.dot(self.w_array[idx])
         gradients = dw_array, db_array
         return gradients
+
+    def save_weights(self, path: str):
+        """Save weights to a file"""
+        weight_dict = {
+            "weights": self.w_array,
+            "biases": self.b_array
+        }
+        with open(path, "w+") as file:
+            pickle.dump(weight_dict, file)
+
+    def load_weights(self, path: str):
+        """Loads weights from a file"""
+        with open(path, "r") as file:
+            weight_dict = pickle.load(file)
+        self.w_array = weight_dict.get("weights")
+        self.b_array = weight_dict.get("biases")
