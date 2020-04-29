@@ -1,4 +1,5 @@
 import pickle
+from pathlib import Path
 from typing import List, Tuple
 
 import numpy as np
@@ -29,9 +30,9 @@ class NeuralNetwork:
         self.biases = []
         for idx in range(len(self.size) - 1):
             self.weights.append(np.random.randn(self.size[idx + 1], self.size[idx]) * std)
-            self.biases.append(np.zeros((self.size[idx + 1])))
+            self.biases.append(np.zeros((self.size[idx + 1], 1)))
 
-    def forward(self, i: np.ndarray) -> Tuple[List[np.ndarray], List[np.ndarray]]:
+    def forward(self, nn_input: np.ndarray) -> Tuple[List[np.ndarray], List[np.ndarray]]:
         """A forward pass through the network.
         params:
             i: The input to the network
@@ -42,8 +43,8 @@ class NeuralNetwork:
         af = self.activation_function
         pre_activations = []
         layer_activations = []
-        pre_activations.append(np.zeros_like(i))
-        layer_activations.append(i)
+        pre_activations.append(np.zeros_like(nn_input))
+        layer_activations.append(nn_input)
         for idx in range(len(self.size) - 1):
             pre_activations.append(np.dot(self.weights[idx], layer_activations[idx]))
             layer_activations.append(af(pre_activations[idx + 1]))
@@ -62,36 +63,34 @@ class NeuralNetwork:
         pre_activations, layer_activations = activations
         daf = self.dactivation_function
         dweights = []
-        dbiases = [len(self.size) - 1]
+        dbiases = []
         for idx in range(len(self.weights)):
             dweights.append(np.zeros_like(self.weights[idx]))
             dbiases.append(np.zeros_like(self.biases[idx]))
         # L = 1/2 (label - o)^2  ->  dL/do = o - label
+        # c: current_derivative, d: dactivation_function_used
 
-        current_derivative = layer_activations[-1] - label
+        c = layer_activations[-1] - label
 
         for idx in reversed(range(len(dweights))):
-            print(len(pre_activations))
-            print(len(dweights))
-            current_derivative = current_derivative.dot(daf(pre_activations[idx + 1]).T)
-            dweights[idx] = current_derivative.dot(activations[idx].T)
-            dbiases[idx] = current_derivative
-            current_derivative = current_derivative.dot(self.weights[idx])
+            d = daf(pre_activations[idx + 1])
+            c = c * d
+            dweights[idx] = np.dot(c, layer_activations[idx].T)
+            dbiases[idx] = c
+            c = np.dot(self.weights[idx].T, c)
         gradients = dweights, dbiases
         return gradients
 
-    def save_weights(self, path: str):
+    def save_weights(self, path: Path):
         """Save weights to a file"""
         weight_dict = {
             "weights": self.weights,
             "biases": self.biases
         }
-        with open(path, "w+") as file:
-            pickle.dump(weight_dict, file)
+        pickle.dump(weight_dict, path.open("wb"))
 
-    def load_weights(self, path: str):
+    def load_weights(self, path: Path):
         """Loads weights from a file"""
-        with open(path, "r") as file:
-            weight_dict = pickle.load(file)
+        weight_dict = pickle.load(path.open("rb"))
         self.weights = weight_dict.get("weights")
         self.biases = weight_dict.get("biases")

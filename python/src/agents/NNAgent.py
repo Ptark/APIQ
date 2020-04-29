@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import numpy as np
 from typing import Tuple, List, Type
 
@@ -13,8 +11,8 @@ from python.src.environments.Environment import Environment
 class NNAgent(Agent):
     """Template for neural network based agents"""
 
-    training_steps = 10000
-    nn_data_dir = str(Path(".").resolve()) + "/python/resources/nn_data/"
+    training_steps = 101
+    nn_data_dir = NNUtility.get_nn_data()
 
     def __init__(self, training_step: int, activation_name: str, size: [int]):
         """Load appropriate parameters depending on environment and learning time"""
@@ -31,15 +29,16 @@ class NNAgent(Agent):
         observation = percept[0]
         action = ""
         activations = []
+        if self.turn_counter == 0:
+            observation = "1111"
         if not self.is_initialized:
             self.idx = int(percept[0])
-            observation = "1111"
             self.sign = 1 - 2 * (int(percept[1]) == 1)
             # load parameters for idx and training steps and sign
             if self.training_step > 0:
                 filename = self.__class__.__name__ + "_" + str(self.idx) + "_" + str(self.sign) + "_" + \
-                           str(self.training_step)
-                path = NNAgent.nn_data_dir + filename
+                           str(self.training_step) + ".td"
+                path = NNAgent.nn_data_dir.joinpath(filename)
                 self.nn.load_weights(path)
             self.is_initialized = True
         reward = -2
@@ -66,13 +65,13 @@ class NNAgent(Agent):
                 percept = environment.calculate_percept(action)
                 label = NNUtility.bitstr_to_narray(percept[1])
                 dw_array, db_array = self.nn.backward(activations, label)
-                self.nn.weights = self.nn.weights.add(dw_array)
-                self.nn.biases = self.nn.biases.add(db_array)
+                for idx in range(len(self.nn.weights)):
+                    self.nn.weights[idx] = self.nn.weights[idx] + dw_array[idx]
+                    self.nn.biases[idx] = self.nn.biases[idx] + db_array[idx]
                 if step > 0 and turn_number == environment.number_of_turns - 1:
                     if np.log10(step).is_integer():
                         filename = self.__class__.__name__ + "_" + str(self.idx) + "_" + str(self.sign) + "_" + \
-                                   str(step)
-                        path = NNAgent.nn_data_dir + filename
+                                   str(step) + ".td"
+                        path = NNAgent.nn_data_dir.joinpath(filename)
                         self.nn.save_weights(path)
-                self.turn_counter += 1
 

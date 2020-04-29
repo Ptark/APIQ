@@ -1,9 +1,7 @@
 import dis
 import time
+from pathlib import Path
 from typing import List, Callable
-
-import numpy as np
-
 from python.src.agents.RandomActions import RandomActions
 from python.src.agents.Handcrafted import Handcrafted
 from python.src.agents.Agent import Agent
