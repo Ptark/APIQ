@@ -1,18 +1,19 @@
 from pathlib import Path
 
 import numpy as np
-from typing import Tuple, List
+from typing import Tuple, List, Type
 
 from python.src import Utility
 from python.src.agents.Agent import Agent
 from python.src.agents.neural_networks import NNUtility
 from python.src.agents.neural_networks.NeuralNetwork import NeuralNetwork
+from python.src.environments.Environment import Environment
 
 
 class NNAgent(Agent):
     """Template for neural network based agents"""
 
-    training_steps = 1
+    training_steps = 10000
     nn_data_dir = str(Path(".").resolve()) + "/python/resources/nn_data/"
 
     def __init__(self, training_step: int, activation_name: str, size: [int]):
@@ -24,7 +25,8 @@ class NNAgent(Agent):
         """Calculates an action as a string of 0s and 1s from the neural network."""
         return self.calculate_activations_and_action(percept)[1]
 
-    def calculate_activations_and_action(self, percept: Tuple[str, str]) -> Tuple[List, str]:
+    def calculate_activations_and_action(self, percept: Tuple[str, str]) \
+            -> Tuple[Tuple[List[np.ndarray], List[np.ndarray]], str]:
         """Feed percept into nn and returns activations and action"""
         observation = percept[0]
         action = ""
@@ -43,7 +45,7 @@ class NNAgent(Agent):
         reward = -2
         for action_idx in range(15):
             action_string = format(action_idx, 'b').zfill(4)
-            nn_input = np.fromstring(observation + action_string, float)
+            nn_input = NNUtility.bitstr_to_narray(observation + action_string)
             nn_output = self.nn.forward(nn_input)
             bit_string = NNUtility.narray_to_bitstr(nn_output[1][-1])
             action_reward = self.sign * Utility.get_reward_from_bitstring(bit_string)
@@ -54,7 +56,7 @@ class NNAgent(Agent):
         self.turn_counter += 1
         return activations, action
 
-    def train(self, environment_class, sign_bit: str):
+    def train(self, environment_class: Type[Environment], sign_bit: str):
         """Train agent in environment training_steps times"""
         for step in range(NNAgent.training_steps):
             self.turn_counter = 0
@@ -62,10 +64,10 @@ class NNAgent(Agent):
             for turn_number in range(environment.number_of_turns):
                 activations, action = self.calculate_activations_and_action((str(environment.idx), sign_bit))
                 percept = environment.calculate_percept(action)
-                label = percept[1]
+                label = NNUtility.bitstr_to_narray(percept[1])
                 dw_array, db_array = self.nn.backward(activations, label)
-                self.nn.w_array = self.nn.w_array.add(dw_array)
-                self.nn.b_array = self.nn.b_array.add(db_array)
+                self.nn.weights = self.nn.weights.add(dw_array)
+                self.nn.biases = self.nn.biases.add(db_array)
                 if step > 0 and turn_number == environment.number_of_turns - 1:
                     if np.log10(step).is_integer():
                         filename = self.__class__.__name__ + "_" + str(self.idx) + "_" + str(self.sign) + "_" + \

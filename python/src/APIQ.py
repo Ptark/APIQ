@@ -72,6 +72,20 @@ def reward_agent_environment(agent_class: Type[Agent], environment_class: Type[E
     return summed_reward / number_of_evaluations
 
 
+def train():
+    """Train trainable untrained agents"""
+    agent_classes = Utility.agents()
+    for agent_class in agent_classes:
+        if agent_class.training_steps > 1:
+            train_agent(agent_class)
+
+
+def train_agent(agent_class: Type[Agent]):
+    """Train agent in environments"""
+    for environment_class in Utility.environments():
+        train_agent_environment(agent_class, environment_class)
+
+
 def train_agent_environment(agent_class: Type[Agent], environment_class: Type[Environment]):
     """Train agent in environment for sign = 1 and sign = -1"""
     agent_class(0).train(environment_class, "0")

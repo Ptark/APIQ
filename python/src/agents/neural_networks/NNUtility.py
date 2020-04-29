@@ -26,13 +26,17 @@ def drelu(x):
     return (x > 0) * 1
 
 
-def str_to_narray(s):
-    """Turn a bitstring into a numpy array neural network input"""
-    return np.fromstring(s, float)
+def bitstr_to_narray(s: str) -> np.ndarray:
+    """Turn a bitstring into a numpy array"""
+    char_list = list(s)
+    array = np.zeros(len(s))
+    for idx in range(len(char_list)):
+        array[idx] = int(char_list[idx])
+    return array
 
 
-def narray_to_bitstr(narray):
-    """Turn a numpy array neural network output into a bitstring"""
+def narray_to_bitstr(narray: np.ndarray) -> str:
+    """Turn a numpy array into a bitstring"""
     rewardstring = ""
     for o in narray:
         rewardstring += "0" if o <= 0.5 else "1"
