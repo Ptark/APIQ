@@ -4,18 +4,6 @@ from python.src.agents.Agent import Agent
 from python.src.environments.Environment import Environment
 
 
-def complexity() -> List:
-    """Return a dictionary which holds all environments and their complexity"""
-    complexity_dict = []
-    for environment in Utility.environments():
-        env = environment()
-        complexity_dict.append({
-            "name": environment.__name__,
-            "complexity": Utility.environment_complexity(env, env.randomness)
-        })
-    return complexity_dict
-
-
 def apiq(number_of_evaluations: int) -> List:
     """calculate APIQ scores for all agents and accumulate results in a dictionary"""
     apiq_dict = []
@@ -66,3 +54,15 @@ def reward_agent_environment(agent_class: Type[Agent], environment_class: Type[E
         sign = 1 if sign_bit == "0" else -1
         total_reward += sign * reward
     return total_reward / number_of_evaluations
+
+
+def complexity() -> List:
+    """Return a dictionary which holds all environments and their complexity"""
+    complexity_dict = []
+    for environment in Utility.environments():
+        env = environment()
+        complexity_dict.append({
+            "name": environment.__name__,
+            "complexity": Utility.environment_complexity(env, env.randomness)
+        })
+    return complexity_dict

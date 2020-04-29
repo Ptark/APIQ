@@ -27,10 +27,10 @@ class HandcraftedAgent(Agent):
             self.idx = int(percept[0])
             self.sign = 1 - 2 * (int(percept[1]) == 1)
             if self.sign == 1:
-                self.environment_solver = self.environment_switch.get(self.idx)
+                self.environment_solver = self.environment_switch.get
             else:
-                self.environment_solver = self.environment_reversed_switch.get(self.idx)
-        action = self.environment_solver(percept)
+                self.environment_solver = self.environment_reversed_switch.get
+        action = self.environment_solver(self.idx)(percept)
         self.turn_counter += 1
         return action
 

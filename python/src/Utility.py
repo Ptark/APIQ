@@ -3,8 +3,9 @@ import time
 from typing import List, Callable
 
 from python.src.agents.Agent import Agent
-from python.src.agents.HandcraftedAgent import HandcraftedAgent
-from python.src.agents.RandomAgent import RandomAgent
+from python.src.agents.Handcrafted import HandcraftedAgent
+from python.src.agents.NN0x0relu0 import NN0x0relu0
+from python.src.agents.RandomActions import RandomAgent
 from python.src.environments.BiasedCoinFlip import BiasedCoinFlip
 from python.src.environments.DoubleCoinFlip import DoubleCoinFlip
 from python.src.environments.Environment import Environment
@@ -54,7 +55,8 @@ def agents() -> List[type(Agent)]:
     """Initialize and return a list of agents"""
     return [
         RandomAgent,
-        HandcraftedAgent
+        HandcraftedAgent,
+        NN0x0relu0
     ]
 
 

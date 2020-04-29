@@ -10,7 +10,7 @@ class DoubleCoinFlip(Environment):
 
     def __init__(self):
         super().__init__()
-        self.idx = "1"
+        self.idx = 1
         self.randomness = True
 
     def calculate_percept(self, action: str) -> Tuple[str, str]:

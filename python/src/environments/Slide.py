@@ -8,7 +8,7 @@ class Slide(Environment):
         self.at_top = False
         super().__init__()
         self.number_of_turns = 2
-        self.idx = "2"
+        self.idx = 2
 
     def calculate_percept(self, action: str) \
             -> Tuple[str, str]:

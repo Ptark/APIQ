@@ -3,7 +3,7 @@ import pprint
 from python.src import APIQ
 
 
-number_of_evaluations = 20000  # number of evaluations of an agent in an environment for stochastic purposes
+number_of_evaluations = 100  # number of evaluations of an agent in an environment for stochastic purposes
 
 
 def main():

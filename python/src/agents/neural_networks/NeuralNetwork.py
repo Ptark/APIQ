@@ -1,5 +1,5 @@
-from python.src.agents.neural_networks import NNUtility
 import numpy as np
+from python.src.agents.neural_networks import NNUtility
 
 
 class NeuralNetwork:
@@ -20,8 +20,8 @@ class NeuralNetwork:
         self.learning_rate = 1e-1
         self.activation_function = self.activation_function_switch.get(activation_name)[0]
         self.dactivation_function = self.activation_function_switch.get(activation_name)[1]
-        self.w_array = np.empty(len(size) - 1)
-        self.b_array = np.empty(len(size) - 1)
+        self.w_array = [len(size) - 1]
+        self.b_array = [len(size) - 1]
         # load learned parameters depending on environment and number of steps
         # w for weights, b for bias
         std = 0.1
@@ -34,12 +34,6 @@ class NeuralNetwork:
             else:
                 self.w_array[idx] = np.random.randn(size[idx + 1], size[idx]) * std
 
-    def load_weights(self):
-        """Loads weights from a file"""
-
-    def save_weights(self):
-        """Save weights to a file"""
-
     def forward(self, i):
         """A forward pass through the network.
         params:
@@ -49,8 +43,8 @@ class NeuralNetwork:
                 recomputed in the backwards pass. Also contains the output.
         """
         af = self.activation_function
-        pre_activations = np.empty(len(self.size))
-        layer_activations = np.empty(len(self.size))
+        pre_activations = [len(self.size)]
+        layer_activations = [len(self.size)]
         pre_activations[0] = 0
         layer_activations[0] = i
         for idx in range(len(pre_activations) - 1):
@@ -69,8 +63,8 @@ class NeuralNetwork:
         """
         pre_activations, layer_activations = activations
         daf = self.dactivation_function
-        dw_array = np.zeros_like(self.w_array)
-        db_array = np.zeros_like(self.b_array)
+        dw_array = [len(self.size) - 1]
+        db_array = [len(self.size) - 1]
 
         # L = 1/2 (label - o)^2  ->  dL/do = o - label
         current_derivative = layer_activations[-1] - label

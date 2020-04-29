@@ -1,6 +1,6 @@
 import pytest
-from python.src.agents.HandcraftedAgent import HandcraftedAgent
-from python.src.agents.RandomAgent import RandomAgent
+from python.src.agents.Handcrafted import HandcraftedAgent
+from python.src.agents.RandomActions import RandomAgent
 
 
 # fixture method sets up for the tests
