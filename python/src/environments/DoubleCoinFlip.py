@@ -21,7 +21,7 @@ class DoubleCoinFlip(Environment):
         prediction += int(action[-1])
         prediction += int(action[-2])
         if prediction == outcome_one + outcome_two:
-            return "00" + str(outcome_two) + str(outcome_one), "1000"
+            return str(outcome_two) + str(outcome_one), "100"
         else:
-            return "00" + str(outcome_two) + str(outcome_one), "0000"
+            return str(outcome_two) + str(outcome_one), "000"
 

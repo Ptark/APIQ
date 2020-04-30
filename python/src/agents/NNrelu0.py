@@ -6,4 +6,4 @@ class NNrelu0(NNAgent):
 
     def __init__(self, training_step: int):
         """Initialize NNAgent with given parameters"""
-        super().__init__(training_step, activation_name="relu", size=[8, 4])
+        super().__init__(training_step, activation_name="relu", size=[4, 3])

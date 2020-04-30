@@ -42,42 +42,42 @@ class Handcrafted(Agent):
 
     def biased_coin_flip(self, percept: Tuple[str, str]):
         """Returns optimal actions for the biased coin flip"""
-        return "0001"
+        return "01"
 
     def biased_coin_flip_reversed(self, percept: Tuple[str, str]):
         """Returns optimal actions for the reversed biased coin flip"""
-        return "0000"
+        return "00"
 
     def double_coin_flip(self, percept: Tuple[str, str]):
         """Returns optimal actions for the double coin flip"""
-        return "0001"
+        return "01"
 
     def double_coin_flip_reversed(self, percept: Tuple[str, str]):
         """Returns optimal actions for the double coin flip"""
-        return "0000"
+        return "00"
 
     def slide(self, percept: Tuple[str, str]):
         """Returns optimal actions for the slide"""
         if self.turn_counter == 0:
-            return "0001"
+            return "01"
         else:
-            return "0001"
+            return "01"
 
     def slide_reversed(self, percept: Tuple[str, str]):
         """Returns optimal actions for the slide"""
         if self.turn_counter == 0:
-            return "0001"
+            return "01"
         else:
-            return "0000"
+            return "00"
 
     def any_one(self, percept: Tuple[str, str]):
-        return "1111"
+        return "11"
 
     def any_one_reversed(self, percept: Tuple[str, str]):
-        return "0000"
+        return "00"
 
     def specific_one(self, percept: Tuple[str, str]):
-        return "1111"
+        return "11"
 
     def specific_one_reversed(self, percept: Tuple[str, str]):
-        return "0000"
+        return "00"

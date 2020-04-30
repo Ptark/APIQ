@@ -33,7 +33,7 @@ class NNAgent(Agent):
         activations = []
         # change observation to 1111 if first turn
         if self.turn_counter == 0:
-            observation = "1111"
+            observation = "11"
         # set idx and sgn and load weights if needed
         if not self.is_initialized:
             self.idx = int(percept[0])
@@ -46,12 +46,15 @@ class NNAgent(Agent):
             self.is_initialized = True
         reward = -2
         # calculate expected reward by trying every action
-        for action_idx in range(15):
-            action_string = format(action_idx, 'b').zfill(4)
+        randint = random.randint(0, 19)
+        for action_idx in range(4):
+            action_string = format(action_idx, 'b').zfill(2)
             nn_input = NNUtility.bitstr_to_narray(observation + action_string)
             nn_output = self.nn.forward(nn_input)
             bit_string = NNUtility.narray_to_bitstr(nn_output[1][-1])
             action_reward = self.sign * Utility.get_reward_from_bitstring(bit_string)
+            if randint == action_idx:
+                return nn_output, action_string
             if action_reward == reward:
                 i = random.randint(0, 1)
                 if i == 1:

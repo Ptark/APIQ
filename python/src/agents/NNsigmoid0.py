@@ -6,4 +6,4 @@ class NNsigmoid0(NNAgent):
 
     def __init__(self, training_step: int):
         """Initialize NNAgent with given parameters"""
-        super().__init__(training_step, activation_name="sigmoid", size=[8, 4])
+        super().__init__(training_step, activation_name="sigmoid", size=[4, 3])

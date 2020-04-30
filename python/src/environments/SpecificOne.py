@@ -12,7 +12,7 @@ class SpecificOne(Environment):
 
     def calculate_percept(self, action: str) -> Tuple[str, str]:
         """Returns one if the action contains a 1, otherwise 0."""
-        if action[2] == "1":
-            return "1111", "1000"
-        return "0000", "0000"
+        if action[1] == "1":
+            return "11", "100"
+        return "00", "000"
 

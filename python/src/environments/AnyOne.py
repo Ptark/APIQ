@@ -13,6 +13,6 @@ class AnyOne(Environment):
     def calculate_percept(self, action: str) -> Tuple[str, str]:
         """Returns one if the action contains a 1, otherwise 0."""
         if "1" in action:
-            return "1111", "1000"
-        return "0000", "0000"
+            return "11", "100"
+        return "00", "000"
 

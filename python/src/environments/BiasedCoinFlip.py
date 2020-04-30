@@ -17,6 +17,6 @@ class BiasedCoinFlip(Environment):
         outcome = random.randint(0, 9)
         outcome = 1 if outcome >= 3 else 0
         if int(prediction[-1]) == outcome:
-            return "000" + str(outcome), "1000"
+            return "0" + str(outcome), "100"
         else:
-            return "000" + str(outcome), "0000"
+            return "0" + str(outcome), "000"

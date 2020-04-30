@@ -15,6 +15,6 @@ class RandomActions(Agent):
     def calculate_action(self, percept: Tuple[str, str]) -> str:
         """Returns handcrafted actions depending on the environment"""
         action = ''
-        for i in range(4):
+        for i in range(2):
             action += str(random.randint(0, 1))
         return action

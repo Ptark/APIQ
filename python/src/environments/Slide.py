@@ -16,14 +16,14 @@ class Slide(Environment):
         climbing up and sliding down"""
         if self.at_top is False:
             if action[-1] == "0":
-                return "0000", "0001"
+                return "00", "001"
             else:
                 self.at_top = True
-                return "0001", "0000"
+                return "01", "000"
         else:
             if action[-1] == "0":
-                return "0001", "0000"
+                return "01", "000"
             else:
                 self.at_top = False
-                return "0000", "1000"
+                return "00", "100"
 
