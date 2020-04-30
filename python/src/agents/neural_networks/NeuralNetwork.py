@@ -30,7 +30,8 @@ class NeuralNetwork:
         self.biases = []
         for idx in range(len(self.size) - 1):
             self.weights.append(np.random.randn(self.size[idx + 1], self.size[idx]) * std)
-            self.biases.append(np.zeros((self.size[idx + 1], 1)))
+            self.weights[idx].astype(np.longdouble)
+            self.biases.append(np.zeros((self.size[idx + 1], 1), dtype=np.longdouble))
 
     def forward(self, nn_input: np.ndarray) -> Tuple[List[np.ndarray], List[np.ndarray]]:
         """A forward pass through the network.
@@ -43,16 +44,16 @@ class NeuralNetwork:
         af = self.activation_function
         pre_activations = []
         layer_activations = []
-        pre_activations.append(np.zeros_like(nn_input))
+        pre_activations.append(np.zeros_like(nn_input, dtype=np.longdouble))
         layer_activations.append(nn_input)
+        layer_activations[0].astype(np.longdouble)
         for idx in range(len(self.size) - 1):
-            pre_activations.append(np.dot(self.weights[idx], layer_activations[idx]))
+            pre_activations.append(np.dot(self.weights[idx], layer_activations[idx]) + self.biases[idx])
             layer_activations.append(af(pre_activations[idx + 1]))
         activations = pre_activations, layer_activations
         return activations
 
-    def backward(self, activations: Tuple[List[np.ndarray], List[np.ndarray]], label: np.ndarray) \
-            -> Tuple[List[np.ndarray], List[np.ndarray]]:
+    def backward(self, activations: Tuple[List[np.ndarray], List[np.ndarray]], label: np.ndarray):
         """Compute the gradients for training from the actual reward
         params:
             activations: the activations for each layer.
@@ -65,8 +66,8 @@ class NeuralNetwork:
         dweights = []
         dbiases = []
         for idx in range(len(self.weights)):
-            dweights.append(np.zeros_like(self.weights[idx]))
-            dbiases.append(np.zeros_like(self.biases[idx]))
+            dweights.append(np.zeros_like(self.weights[idx], dtype=np.longdouble))
+            dbiases.append(np.zeros_like(self.biases[idx], dtype=np.longdouble))
         # L = 1/2 (label - o)^2  ->  dL/do = o - label
         # c: current_derivative, d: dactivation_function_used
 
@@ -78,8 +79,9 @@ class NeuralNetwork:
             dweights[idx] = np.dot(c, layer_activations[idx].T)
             dbiases[idx] = c
             c = np.dot(self.weights[idx].T, c)
-        gradients = dweights, dbiases
-        return gradients
+        for idx in range(len(self.weights)):
+            self.weights[idx] = self.weights[idx] + dweights[idx] * self.learning_rate
+            self.biases[idx] = self.biases[idx] + dbiases[idx] * self.learning_rate
 
     def save_weights(self, path: Path):
         """Save weights to a file"""

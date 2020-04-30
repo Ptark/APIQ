@@ -14,12 +14,16 @@ class Handcrafted(Agent):
         self.environment_switch = {
             0: self.biased_coin_flip,
             1: self.double_coin_flip,
-            2: self.slide
+            2: self.slide,
+            3: self.any_one,
+            4: self.specific_one,
         }
         self.environment_reversed_switch = {
             0: self.biased_coin_flip_reversed,
             1: self.double_coin_flip_reversed,
-            2: self.slide_reversed
+            2: self.slide_reversed,
+            3: self.any_one_reversed,
+            4: self.specific_one_reversed,
         }
         self.environment_solver = None
 
@@ -65,3 +69,15 @@ class Handcrafted(Agent):
             return "0001"
         else:
             return "0000"
+
+    def any_one(self, percept: Tuple[str, str]):
+        return "1111"
+
+    def any_one_reversed(self, percept: Tuple[str, str]):
+        return "0000"
+
+    def specific_one(self, percept: Tuple[str, str]):
+        return "1111"
+
+    def specific_one_reversed(self, percept: Tuple[str, str]):
+        return "0000"

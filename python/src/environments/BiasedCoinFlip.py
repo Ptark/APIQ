@@ -15,10 +15,7 @@ class BiasedCoinFlip(Environment):
     def calculate_percept(self, prediction: str) -> Tuple[str, str]:
         """Takes a prediction, throws a coin with 30% chance for heads (0) and returns observation and reward"""
         outcome = random.randint(0, 9)
-        if outcome >= 3:
-            outcome = 1
-        else:
-            outcome = 0
+        outcome = 1 if outcome >= 3 else 0
         if int(prediction[-1]) == outcome:
             return "000" + str(outcome), "1000"
         else:

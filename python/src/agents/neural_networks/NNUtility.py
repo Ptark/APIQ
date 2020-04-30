@@ -3,19 +3,25 @@ from pathlib import Path
 import numpy as np
 
 
-def dtanh(x):
+def dtanh(array):
     """Derivative of tanh activation function."""
-    return 1 - x * x
+    for idx in range(len(array)):
+        array[idx, 0] = 1 - array[idx, 0] * array[idx, 0]
+    return array
 
 
 def sigmoid(array: np.ndarray):
     """Sigmoid activation function."""
-    return 1 / (1 + np.exp(-array))
+    for idx in range(len(array)):
+        array[idx, 0] = 1 / (1 + np.exp(-array[idx, 0]))
+    return array
 
 
-def dsigmoid(x):
+def dsigmoid(array):
     """Derivative of sigmoid activation function"""
-    return x * (1 - x)
+    for idx in range(len(array)):
+        array[idx, 0] = array[idx, 0] * (1 - array[idx, 0])
+    return array
 
 
 def relu(array):
@@ -35,7 +41,7 @@ def drelu(array):
 def bitstr_to_narray(s: str) -> np.ndarray:
     """Turn a bitstring into a numpy array"""
     char_list = list(s)
-    array = np.zeros((len(s), 1))
+    array = np.zeros((len(s), 1), dtype=np.longdouble)
     for idx in range(len(char_list)):
         array[idx, 0] = int(char_list[idx])
     return array

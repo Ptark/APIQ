@@ -1,11 +1,15 @@
 import dis
 import time
-from pathlib import Path
 from typing import List, Callable
+
+from python.src.agents.NNsigmoid0 import NNsigmoid0
+from python.src.agents.NNtanh0 import NNtanh0
 from python.src.agents.RandomActions import RandomActions
 from python.src.agents.Handcrafted import Handcrafted
 from python.src.agents.Agent import Agent
 from python.src.agents.NNrelu0 import NNrelu0
+from python.src.environments.SpecificOne import SpecificOne
+from python.src.environments.AnyOne import AnyOne
 from python.src.environments.BiasedCoinFlip import BiasedCoinFlip
 from python.src.environments.DoubleCoinFlip import DoubleCoinFlip
 from python.src.environments.Environment import Environment
@@ -55,7 +59,9 @@ def agents() -> List[type(Agent)]:
     return [
         RandomActions,
         Handcrafted,
-        NNrelu0
+        NNrelu0,
+        NNsigmoid0,
+        NNtanh0,
     ]
 
 
@@ -65,4 +71,6 @@ def environments() -> List[type(Environment)]:
         BiasedCoinFlip,
         DoubleCoinFlip,
         Slide,
+        AnyOne,
+        SpecificOne
     ]

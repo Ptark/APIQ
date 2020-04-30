@@ -37,6 +37,7 @@ def apiq_agent(agent_class: Type[Agent], number_of_evaluations):
             "reward-negative": [],
             "step": []
         }
+        i = 0
         for step in range(training_steps):
             if step == 0 or np.log10(step).is_integer():
                 reward_positive = reward_agent_environment(agent_class, environments[idx], number_of_evaluations, "0",
@@ -46,7 +47,8 @@ def apiq_agent(agent_class: Type[Agent], number_of_evaluations):
                 environment_dict["reward-positive"].append(reward_positive)
                 environment_dict["reward-negative"].append(reward_negative)
                 environment_dict["step"].append(step)
-                sum_scaled_rewards[step] += (reward_positive + reward_negative) * scaling_factors[idx]
+                sum_scaled_rewards[i] += (reward_positive + reward_negative) * scaling_factors[idx]
+                i += 1
         agent_dict["environment_scores"].append(environment_dict)
     agent_dict["apiq"] = []
     for unnormalized_apiq in sum_scaled_rewards:
