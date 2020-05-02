@@ -80,8 +80,8 @@ class NeuralNetwork:
             dbiases[idx] = c
             c = np.dot(self.weights[idx].T, c)
         for idx in range(len(self.weights)):
-            self.weights[idx] = self.weights[idx] + dweights[idx] * self.learning_rate
-            self.biases[idx] = self.biases[idx] + dbiases[idx] * self.learning_rate
+            self.weights[idx] = self.weights[idx] - dweights[idx] * self.learning_rate
+            self.biases[idx] = self.biases[idx] - dbiases[idx] * self.learning_rate
         return dweights, dbiases
 
     def save_weights(self, path: Path):

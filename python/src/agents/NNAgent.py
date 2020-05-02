@@ -12,9 +12,9 @@ from python.src.environments.Environment import Environment
 class NNAgent(Agent):
     """Template for neural network based agents"""
 
-    training_steps = 1001
+    training_steps = 10001
     nn_data_dir = NNUtility.get_nn_data()
-    learning_rate = 0.1
+    learning_rate = 0.01
 
     def __init__(self, training_step: int, activation_name: str, size: [int]):
         """Load appropriate parameters depending on environment and learning time"""

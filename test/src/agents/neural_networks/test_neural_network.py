@@ -7,13 +7,13 @@ from python.src.agents.neural_networks.NeuralNetwork import NeuralNetwork
 
 def test_gradients():
     """Calculates numerical biases and compares them to """
-    nn = NeuralNetwork("sigmoid", [4, 3])
+    nn = NeuralNetwork("sigmoid", [4, 4, 4, 3])
     nn_input = NNUtility.bitstr_to_narray("1101")
     nn_output = nn.forward(nn_input)
     label = NNUtility.bitstr_to_narray("101")
     dweights, dbiases = nn.backward(nn_output, label)
-    delta = 0.0000001
-    rel_tol = 0.04
+    delta = 1e-7
+    rel_tol = 0.3
     for idx in range(len(nn.weights)):
         for i in range(len(nn.weights[idx])):
             # Calculate numerical biases and compare to backprop
