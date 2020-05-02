@@ -63,3 +63,10 @@ def get_project_root() -> Path:
 def get_nn_data() -> Path:
     """Returns nn_data_folder."""
     return get_project_root().joinpath('resources/agents/nn_data')
+
+
+def loss(output, label):
+    """Mean squared loss function"""
+    dif = output - label
+    return float(0.5 * np.dot(dif.T, dif))
+

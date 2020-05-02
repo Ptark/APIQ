@@ -82,6 +82,7 @@ class NeuralNetwork:
         for idx in range(len(self.weights)):
             self.weights[idx] = self.weights[idx] + dweights[idx] * self.learning_rate
             self.biases[idx] = self.biases[idx] + dbiases[idx] * self.learning_rate
+        return dweights, dbiases
 
     def save_weights(self, path: Path):
         """Save weights to a file"""
