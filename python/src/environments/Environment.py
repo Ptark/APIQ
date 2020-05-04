@@ -5,11 +5,15 @@ from typing import Tuple
 class Environment(ABC):
     """Abstract class models an environment"""
 
+    number_of_turns = 1
+    randomness = False
+    observation_length = 0
+    reward_length = 2
+    action_length = 1
+
     @abstractmethod
-    def __init__(self):
-        self.number_of_turns = 1
-        self.idx = 0
-        self.randomness = False
+    def __init__(self, sign: str):
+        self.sign = sign
 
     @abstractmethod
     def calculate_percept(self, action: str) \

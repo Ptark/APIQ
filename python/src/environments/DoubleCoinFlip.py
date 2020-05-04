@@ -8,10 +8,13 @@ from python.src.environments.Environment import Environment
 class DoubleCoinFlip(Environment):
     """Class models a double coin flip."""
 
-    def __init__(self):
-        super().__init__()
-        self.idx = 1
-        self.randomness = True
+    randomness = True
+    observation_length = 2
+    reward_length = 2
+    action_length = 2
+
+    def __init__(self, sign: str):
+        super().__init__(sign)
 
     def calculate_percept(self, action: str) -> Tuple[str, str]:
         """Takes a prediction, throws two coins and returns observation and reward"""
@@ -21,7 +24,6 @@ class DoubleCoinFlip(Environment):
         prediction += int(action[-1])
         prediction += int(action[-2])
         if prediction == outcome_one + outcome_two:
-            return str(outcome_two) + str(outcome_one), "100"
+            return str(outcome_two) + str(outcome_one), self.sign + "1"
         else:
-            return str(outcome_two) + str(outcome_one), "000"
-
+            return str(outcome_two) + str(outcome_one), self.sign + "0"

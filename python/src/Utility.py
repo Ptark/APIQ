@@ -1,5 +1,6 @@
 import dis
 import time
+from pathlib import Path
 from typing import List, Callable
 
 from python.src.agents.NNrelu4443 import NNrelu4443
@@ -44,15 +45,21 @@ def method_complexity(method: Callable) -> float:
 def get_reward_from_bitstring(s: str) -> float:
     """Calculate reward from bit string"""
     reward = 0
-    for idx in range(len(s)):
-        reward += int(s[idx]) * pow(0.5, idx)
-    return reward
+    sign = 1 if s[0] == "0" else -1
+    for idx in range(len(s) - 1):
+        reward += int(s[idx + 1]) * pow(0.5, idx - 1)
+    return sign * reward
 
 
 def get_random_bit() -> int:
     """Returns a pseudorandom bit from a timestamp"""
     seed = time.time()
     return pow(2, int(str(seed).replace('.', '')[-5:])) % 3 % 2
+
+
+def get_resources_path() -> Path:
+    """Returns resources path."""
+    return Path(__file__).parent.joinpath('resources')
 
 
 def agents() -> List[type(Agent)]:
