@@ -12,8 +12,8 @@ class Environment(ABC):
     action_length = 1
 
     @abstractmethod
-    def __init__(self, sign: str):
-        self.sign = sign
+    def __init__(self, sign_bit: str):
+        self.sign_bit = sign_bit
 
     @abstractmethod
     def calculate_percept(self, action: str) \

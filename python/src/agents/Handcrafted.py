@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Type
 
 from python.src.agents.Agent import Agent
 from python.src.environments.Environment import Environment
@@ -7,11 +7,9 @@ from python.src.environments.Environment import Environment
 class Handcrafted(Agent):
     """Models an agent which takes handcrafted actions depending on environments"""
 
-    training_steps = 1
-
-    def __init__(self, environment: Environment, training_step: int = 0):
+    def __init__(self, environment_class: Type[Environment], sign_bit, training_step: int = 0):
         """Initiate switch dictionaries for choosing environment appropriate actions"""
-        super().__init__(environment, training_step)
+        super().__init__(environment_class, sign_bit, training_step)
         self.environment_switch = {
             "BiasedCoinFlip": self.biased_coin_flip,
             "DoubleCoinFlip": self.double_coin_flip,
@@ -32,11 +30,11 @@ class Handcrafted(Agent):
     def calculate_action(self, percept: Tuple[str, str]) -> str:
         """Returns handcrafted actions depending on the environment"""
         if self.turn_counter == 0:
-            if self.environment.sign == "0":
+            if percept[1][0] == "0":
                 self.environment_solver = self.environment_switch.get
             else:
                 self.environment_solver = self.environment_reversed_switch.get
-        action = self.environment_solver(self.environment.__class__.__name__)(percept)
+        action = self.environment_solver(self.environment_class.__name__)(percept)
         self.turn_counter += 1
         return action
 

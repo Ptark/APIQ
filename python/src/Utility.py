@@ -1,21 +1,9 @@
 import dis
 import time
 from pathlib import Path
-from typing import List, Callable
+from typing import Callable
 
-from python.src.agents.NNrelu4443 import NNrelu4443
-from python.src.agents.NNsigmoid0 import NNsigmoid0
-from python.src.agents.NNtanh0 import NNtanh0
-from python.src.agents.RandomActions import RandomActions
-from python.src.agents.Handcrafted import Handcrafted
-from python.src.agents.Agent import Agent
-from python.src.agents.NNrelu0 import NNrelu0
-from python.src.environments.SpecificOne import SpecificOne
-from python.src.environments.AnyOne import AnyOne
-from python.src.environments.BiasedCoinFlip import BiasedCoinFlip
-from python.src.environments.DoubleCoinFlip import DoubleCoinFlip
 from python.src.environments.Environment import Environment
-from python.src.environments.Slide import Slide
 
 randomness_complexity = 25
 
@@ -47,7 +35,7 @@ def get_reward_from_bitstring(s: str) -> float:
     reward = 0
     sign = 1 if s[0] == "0" else -1
     for idx in range(len(s) - 1):
-        reward += int(s[idx + 1]) * pow(0.5, idx - 1)
+        reward += int(s[idx + 1]) * pow(0.5, idx)
     return sign * reward
 
 
@@ -59,25 +47,4 @@ def get_random_bit() -> int:
 
 def get_resources_path() -> Path:
     """Returns resources path."""
-    return Path(__file__).parent.joinpath('resources')
-
-
-def agents() -> List[type(Agent)]:
-    """Initialize and return a list of agents"""
-    return [
-        RandomActions,
-        Handcrafted,
-        NNrelu0,
-        NNrelu4443
-    ]
-
-
-def environments() -> List[type(Environment)]:
-    """Initialize and return a list of environments"""
-    return [
-        BiasedCoinFlip,
-        DoubleCoinFlip,
-        Slide,
-        AnyOne,
-        SpecificOne
-    ]
+    return Path(__file__).parent.parent.joinpath('resources')

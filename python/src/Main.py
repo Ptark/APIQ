@@ -10,9 +10,9 @@ step_size = 200
 
 def main():
     """Calculate apiq with number_of_evaluations"""
-    APIQ.train(training_steps, step_size)
+    APIQ.train()
     pprint.pprint(APIQ.complexity(), sort_dicts=False)
-    pprint.pprint(APIQ.apiq(number_of_evaluations, training_steps, step_size), sort_dicts=False)
+    pprint.pprint(APIQ.apiq(), sort_dicts=False)
 
 
 if __name__ == '__main__':

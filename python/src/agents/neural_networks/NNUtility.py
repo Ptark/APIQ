@@ -55,16 +55,6 @@ def narray_to_bitstr(narray: np.ndarray) -> str:
     return rewardstring
 
 
-def get_project_root() -> Path:
-    """Returns project root folder."""
-    return Path(__file__).parent.parent.parent.parent
-
-
-def get_nn_data() -> Path:
-    """Returns nn_data_folder."""
-    return get_project_root().joinpath('resources/agents/nn_data')
-
-
 def loss(output, label):
     """Mean squared loss function"""
     dif = output - label
