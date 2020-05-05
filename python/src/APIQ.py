@@ -21,9 +21,8 @@ from python.src.environments.DoubleCoinFlip import DoubleCoinFlip
 is_trained_set_path = Utility.get_resources_path().joinpath('data/is_trained_set.apiq')
 is_evaluated_set_path = Utility.get_resources_path().joinpath('data/is_evaluated_set.apiq')
 is_trained_set = pickle.load(is_trained_set_path.open("rb")) if is_trained_set_path.is_file() else set()
-number_of_evaluations = 1000
+number_of_evaluations = 100
 training_steps = 1001
-step_size = 200
 
 
 def apiq() -> List:
@@ -32,7 +31,7 @@ def apiq() -> List:
     apiq_dict = []
     agent_classes = get_agents()
     for idx in range(len(agent_classes)):
-        print("Evaluate %s %d/%d" % (agent_classes[idx].__name__, idx + 1, len(agent_classes)))
+        print("%s %d/%d" % (agent_classes[idx].__name__, idx + 1, len(agent_classes)))
         apiq_dict.append(apiq_agent(agent_classes[idx]))
     return apiq_dict
 
@@ -40,26 +39,27 @@ def apiq() -> List:
 def apiq_agent(agent_class: Type[Agent]):
     """calculate APIQ for an agent and accumulate results in a dictionary"""
     environment_classes = get_environments()
-    scaling_factors = [Utility.get_scaling_factor(env("0"), env("0").randomness) for env in environment_classes]
+    scaling_factors = [Utility.get_scaling_factor(env("0"), env("0").has_randomness) for env in environment_classes]
     norming_factor = sum(scaling_factors)
     sum_scaled_rewards = []
     for training_step in range(training_steps):
-        if training_step % step_size == 0:
+        if training_step == 0 or (agent_class.is_trainable and Utility.is_saved(training_step)):
             sum_scaled_rewards.append(0)
     agent_dict = {
         "name": agent_class.__name__,
         "environment_scores": []
     }
     for idx in range(len(environment_classes)):
-        print("    Training on %s - (%d/%d)" % (environment_classes[idx].__name__, idx + 1, len(environment_classes)))
+        print("    Evaluating on %s - (%d/%d)" % (environment_classes[idx].__name__, idx + 1, len(environment_classes)))
         environment_dict = {
             "name": environment_classes[idx].__name__,
             "reward-positive": [],
             "reward-negative": [],
             "step": []
         }
+        sum_idx = 0
         for training_step in range(training_steps):
-            if training_step == 0 or (training_step % step_size == 0 and agent_class.is_trainable):
+            if training_step == 0 or (agent_class.is_trainable and Utility.is_saved(training_step)):
                 reward_positive = reward_agent_environment(agent_class, environment_classes[idx], "0",
                                                            training_step)
                 reward_negative = reward_agent_environment(agent_class, environment_classes[idx], "1",
@@ -67,7 +67,8 @@ def apiq_agent(agent_class: Type[Agent]):
                 environment_dict["reward-positive"].append(reward_positive)
                 environment_dict["reward-negative"].append(reward_negative)
                 environment_dict["step"].append(training_step)
-                sum_scaled_rewards[int(training_step / step_size)] += (reward_positive + reward_negative) * scaling_factors[idx]
+                sum_scaled_rewards[sum_idx] += (reward_positive + reward_negative) * scaling_factors[idx]
+                sum_idx += 1
         agent_dict["environment_scores"].append(environment_dict)
     agent_dict["apiq"] = []
     for unnormalized_apiq in sum_scaled_rewards:
@@ -79,7 +80,10 @@ def reward_agent_environment(agent_class: Type[Agent], environment_class: Type[E
                              training_step: int) -> float:
     """Evaluate the reward an agent earns on average in an environment"""
     summed_reward = 0
-    for i in range(number_of_evaluations):
+    evaluations = number_of_evaluations
+    if not environment_class.has_randomness and not agent_class.has_randomness:
+        evaluations = 1
+    for i in range(evaluations):
         agent = agent_class(environment_class, sign_bit, training_step)
         environment = environment_class(sign_bit)
         observation = "1" * environment.observation_length
@@ -89,7 +93,7 @@ def reward_agent_environment(agent_class: Type[Agent], environment_class: Type[E
             action = agent.calculate_action(percept)
             percept = environment.calculate_percept(action)
             summed_reward += Utility.get_reward_from_bitstring(percept[1])
-    return summed_reward / number_of_evaluations
+    return summed_reward / evaluations
 
 
 def train():
@@ -127,7 +131,7 @@ def train_agent_environment(agent_class: Type[Agent], environment_class: Type[En
             action = agent.calculate_action(percept)
             percept = environment.calculate_percept(action)
             agent.train(percept[1])
-        if training_step % step_size == 0 and training_step != 0:
+        if Utility.is_saved(training_step):
             agent.save(sign_bit, training_step)
         agent.reset()
 
@@ -140,7 +144,7 @@ def complexity() -> List:
         env = environment_class("0")
         complexity_dict.append({
             "name": environment_class.__name__,
-            "complexity": Utility.environment_complexity(env, env.randomness)
+            "complexity": Utility.environment_complexity(env, env.has_randomness)
         })
     return complexity_dict
 

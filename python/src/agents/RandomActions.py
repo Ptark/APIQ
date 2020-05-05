@@ -8,6 +8,8 @@ from python.src.environments.Environment import Environment
 class RandomActions(Agent):
     """Models an agent which takes handcrafted actions depending on environments"""
 
+    has_randomness = True
+
     def __init__(self, environment_class: Type[Environment], sign_bit: str, training_step: int = 0):
         super().__init__(environment_class, sign_bit, training_step)
 

@@ -8,6 +8,7 @@ class Agent(ABC):
     """Abstract class models an agent"""
 
     is_trainable = False
+    has_randomness = False
 
     @abstractmethod
     def __init__(self, environment_class: Type[Environment], sign_bit: str, training_step: int):

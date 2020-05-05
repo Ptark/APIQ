@@ -14,6 +14,7 @@ class NNAgent(Agent):
     is_trainable = True
     training_data_dir = Utility.get_resources_path().joinpath('data/training_data')
     learning_rate = 0.01
+    has_randomness = True
 
     def __init__(self, environment_class: Type[Environment], sign_bit: str, training_step: int, activation_name: str, hidden_size: [int]):
         """Load appropriate parameters depending on environment and learning time"""

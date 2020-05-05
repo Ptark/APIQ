@@ -7,7 +7,7 @@ from python.src.environments.Environment import Environment
 class BiasedCoinFlip(Environment):
     """Class models a biased 25% coin flip."""
 
-    randomness = True
+    has_randomness = True
     observation_length = 1
     reward_length = 2
     action_length = 1

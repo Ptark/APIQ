@@ -8,7 +8,7 @@ from python.src.environments.Environment import Environment
 class DoubleCoinFlip(Environment):
     """Class models a double coin flip."""
 
-    randomness = True
+    has_randomness = True
     observation_length = 2
     reward_length = 2
     action_length = 2

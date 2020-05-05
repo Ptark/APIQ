@@ -1,5 +1,6 @@
 import dis
 import time
+import math
 from pathlib import Path
 from typing import Callable
 
@@ -48,3 +49,15 @@ def get_random_bit() -> int:
 def get_resources_path() -> Path:
     """Returns resources path."""
     return Path(__file__).parent.parent.joinpath('resources')
+
+
+def is_saved(training_step: int) -> bool:
+    """Returns boolean indicating if the given training step is to be saved or loaded."""
+    if training_step == 0:
+        return False
+    if math.log10(training_step).is_integer():
+        return True
+    if math.log10(training_step * 2).is_integer():
+        return True
+    return False
+
