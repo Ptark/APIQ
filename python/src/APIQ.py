@@ -1,3 +1,4 @@
+import concurrent.futures
 import pickle
 from typing import List, Type
 
@@ -21,18 +22,23 @@ from python.src.environments.DoubleCoinFlip import DoubleCoinFlip
 is_trained_set_path = Utility.get_resources_path().joinpath('data/is_trained_set.apiq')
 is_evaluated_set_path = Utility.get_resources_path().joinpath('data/is_evaluated_set.apiq')
 is_trained_set = pickle.load(is_trained_set_path.open("rb")) if is_trained_set_path.is_file() else set()
-number_of_evaluations = 100
-training_steps = 1001
+number_of_evaluations = 100000
+training_steps = 100001
 
 
 def apiq() -> List:
     """calculate APIQ scores for all agents and accumulate results in a dictionary"""
-    print("Evaluate APIQ...")
+    print("Calculating APIQ...")
     apiq_dict = []
     agent_classes = get_agents()
-    for idx in range(len(agent_classes)):
-        print("%s %d/%d" % (agent_classes[idx].__name__, idx + 1, len(agent_classes)))
-        apiq_dict.append(apiq_agent(agent_classes[idx]))
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        future_list = {executor.submit(apiq_agent, agent_class): agent_class for agent_class in agent_classes}
+        idx = 1
+        for future in concurrent.futures.as_completed(future_list):
+            agent_dict = future.result()
+            apiq_dict.append(agent_dict)
+            print("    %d/%d agents" % (idx, len(future_list)))
+            idx += 1
     return apiq_dict
 
 
@@ -50,7 +56,6 @@ def apiq_agent(agent_class: Type[Agent]):
         "environment_scores": []
     }
     for idx in range(len(environment_classes)):
-        print("    Evaluating on %s - (%d/%d)" % (environment_classes[idx].__name__, idx + 1, len(environment_classes)))
         environment_dict = {
             "name": environment_classes[idx].__name__,
             "reward-positive": [],
@@ -98,12 +103,15 @@ def reward_agent_environment(agent_class: Type[Agent], environment_class: Type[E
 
 def train():
     """Train trainable untrained agents"""
-    print("Training...")
+    print("Training agents...")
     agent_classes = get_agents()
-    for idx in range(len(agent_classes)):
-        print("%s %d/%d" % (agent_classes[idx].__name__, idx + 1, len(agent_classes)))
-        if agent_classes[idx].is_trainable:
-            train_agent(agent_classes[idx])
+    trainable_agent_classes = list(filter(lambda x: x.is_trainable, agent_classes))
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        future_list = {executor.submit(train_agent, agent_class): agent_class for agent_class in trainable_agent_classes}
+        idx = 1
+        for future in concurrent.futures.as_completed(future_list):
+            print("    %d/%d agents" % (idx, len(future_list)))
+            idx += 1
     # save set of trained class environment tuples
     pickle.dump(is_trained_set, is_trained_set_path.open("wb"))
 
@@ -112,7 +120,6 @@ def train_agent(agent_class: Type[Agent]):
     """Train agent in environments"""
     environment_classes = get_environments()
     for idx in range(len(environment_classes)):
-        print("    Training on %s - (%d/%d)" % (environment_classes[idx].__name__, idx + 1, len(environment_classes)))
         if not (agent_class, environment_classes[idx]) in is_trained_set:
             train_agent_environment(agent_class, environment_classes[idx], "0")
             train_agent_environment(agent_class, environment_classes[idx], "1")
@@ -138,7 +145,7 @@ def train_agent_environment(agent_class: Type[Agent], environment_class: Type[En
 
 def complexity() -> List:
     """Return a dictionary which holds all environments and their complexity"""
-    print("Calculate complexity...")
+    print("Calculating complexities...")
     complexity_dict = []
     for environment_class in get_environments():
         env = environment_class("0")

@@ -12,7 +12,7 @@ class Environment(ABC):
     action_length = 1
 
     @abstractmethod
-    def __init__(self, sign_bit: str):
+    def __init__(self, sign_bit: str = "0"):
         self.sign_bit = sign_bit
 
     @abstractmethod

@@ -16,7 +16,7 @@ class NNAgent(Agent):
     learning_rate = 0.01
     has_randomness = True
 
-    def __init__(self, environment_class: Type[Environment], sign_bit: str, training_step: int, activation_name: str, hidden_size: [int]):
+    def __init__(self, environment_class: Type[Environment], sign_bit: str = "0", training_step: int = 0, activation_name: str = "relu", hidden_size: [int] = []):
         """Load appropriate parameters depending on environment and learning time"""
         super().__init__(environment_class, sign_bit, training_step)
         input_size = [self.environment_class.observation_length + self.environment_class.action_length]

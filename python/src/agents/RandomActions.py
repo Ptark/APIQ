@@ -10,7 +10,7 @@ class RandomActions(Agent):
 
     has_randomness = True
 
-    def __init__(self, environment_class: Type[Environment], sign_bit: str, training_step: int = 0):
+    def __init__(self, environment_class: Type[Environment], sign_bit: str = "0", training_step: int = 0):
         super().__init__(environment_class, sign_bit, training_step)
 
     def calculate_action(self, percept: Tuple[str, str]) -> str:

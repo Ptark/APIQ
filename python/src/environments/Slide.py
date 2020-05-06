@@ -10,7 +10,7 @@ class Slide(Environment):
     reward_length = 4
     action_length = 1
 
-    def __init__(self, sign_bit: str):
+    def __init__(self, sign_bit: str = "0"):
         self.at_top = False
         super().__init__(sign_bit)
 

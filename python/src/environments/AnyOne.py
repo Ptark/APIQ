@@ -9,7 +9,7 @@ class AnyOne(Environment):
     reward_length = 2
     action_length = 2
 
-    def __init__(self, sign_bit):
+    def __init__(self, sign_bit: str = "0"):
         super().__init__(sign_bit)
 
     def calculate_percept(self, action: str) -> Tuple[str, str]:

@@ -7,7 +7,7 @@ from python.src.environments.Environment import Environment
 class Handcrafted(Agent):
     """Models an agent which takes handcrafted actions depending on environments"""
 
-    def __init__(self, environment_class: Type[Environment], sign_bit, training_step: int = 0):
+    def __init__(self, environment_class: Type[Environment], sign_bit: str = "0", training_step: int = 0):
         """Initiate switch dictionaries for choosing environment appropriate actions"""
         super().__init__(environment_class, sign_bit, training_step)
         self.environment_switch = {

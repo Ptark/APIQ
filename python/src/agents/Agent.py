@@ -11,7 +11,7 @@ class Agent(ABC):
     has_randomness = False
 
     @abstractmethod
-    def __init__(self, environment_class: Type[Environment], sign_bit: str, training_step: int):
+    def __init__(self, environment_class: Type[Environment], sign_bit: str = "0", training_step: int = 0):
         self.environment_class = environment_class
         self.training_step = training_step
 
@@ -31,7 +31,7 @@ class Agent(ABC):
         Resets agent to first turn if needed"""
         pass
 
-    def save(self, sign_bit: str, training_step: int):
+    def save(self, sign_bit: str = "0", training_step: int = 0):
         """To be implemented by child classes if trainable
         Saves learning to file"""
         pass
