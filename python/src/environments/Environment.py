@@ -10,10 +10,11 @@ class Environment(ABC):
     observation_length = 0
     reward_length = 2
     action_length = 1
+    sign_bit = "0"
 
     @abstractmethod
-    def __init__(self, sign_bit: str = "0"):
-        self.sign_bit = sign_bit
+    def __init__(self):
+        pass
 
     @abstractmethod
     def calculate_percept(self, action: str) \

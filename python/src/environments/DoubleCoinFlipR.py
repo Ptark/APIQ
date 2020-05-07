@@ -5,13 +5,14 @@ import random
 from python.src.environments.Environment import Environment
 
 
-class DoubleCoinFlip(Environment):
-    """Class models a double coin flip."""
+class DoubleCoinFlipR(Environment):
+    """Class models a double coin flip with reversed reward."""
 
     has_randomness = True
     observation_length = 2
     reward_length = 2
     action_length = 2
+    sign_bit = "1"
 
     def __init__(self):
         super().__init__()
@@ -24,6 +25,6 @@ class DoubleCoinFlip(Environment):
         prediction += int(action[-1])
         prediction += int(action[-2])
         if prediction == outcome_one + outcome_two:
-            return str(outcome_two) + str(outcome_one), DoubleCoinFlip.sign_bit + "1"
+            return str(outcome_two) + str(outcome_one), DoubleCoinFlipR.sign_bit + "1"
         else:
-            return str(outcome_two) + str(outcome_one), DoubleCoinFlip.sign_bit + "0"
+            return str(outcome_two) + str(outcome_one), DoubleCoinFlipR.sign_bit + "0"

@@ -3,11 +3,6 @@ import pprint
 from python.src import APIQ
 
 
-number_of_evaluations = 1000  # number of evaluations of an agent in an environment for stochastic purposes
-training_steps = 1001
-step_size = 200
-
-
 def main():
     """Calculate apiq with number_of_evaluations"""
     APIQ.train()
