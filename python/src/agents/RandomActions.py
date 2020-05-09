@@ -1,17 +1,17 @@
 from typing import Tuple, Type
 import random
 
-from python.src.agents.Agent import Agent
-from python.src.environments.Environment import Environment
+from python.src.agents.abstract_classes.UntrainableAgent import UntrainableAgent
+from python.src.environments.abstract_classes.Environment import Environment
 
 
-class RandomActions(Agent):
+class RandomActions(UntrainableAgent):
     """Models an agent which takes handcrafted actions depending on environments"""
 
     has_randomness = True
 
-    def __init__(self, environment_class: Type[Environment], sign_bit: str = "0", training_step: int = 0):
-        super().__init__(environment_class, sign_bit, training_step)
+    def __init__(self, environment_class: Type[Environment]):
+        super().__init__(environment_class)
 
     def calculate_action(self, percept: Tuple[str, str]) -> str:
         """Returns handcrafted actions depending on the environment"""

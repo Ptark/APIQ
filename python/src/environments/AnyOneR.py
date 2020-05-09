@@ -1,7 +1,6 @@
 from typing import Tuple
 
-from python.src.environments.AnyOne import AnyOne
-from python.src.environments.Environment import Environment
+from python.src.environments.abstract_classes.Environment import Environment
 
 
 class AnyOneR(Environment):

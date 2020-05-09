@@ -4,23 +4,23 @@ import math
 from pathlib import Path
 from typing import Callable
 
-from python.src.environments.Environment import Environment
+from python.src.environments.abstract_classes.Environment import Environment
 
 randomness_complexity = 25
 
 
-def get_scaling_factor(environment: Environment, randomness: bool = False) -> float:
+def get_scaling_factor(environment: Environment) -> float:
     """Calculate the scaling factor from the complexity of an environment"""
-    return pow(2, -environment_complexity(environment, randomness))
+    return pow(2, -environment_complexity(environment))
 
 
-def environment_complexity(environment: Environment, randomness: bool = False) -> float:
+def environment_complexity(environment: Environment) -> float:
     """Estimate complexity of an environment depending on its calculate_action method and use of random.
     Complexity is measured in bytecode instructions.
     One instruction has 2 byte.
     """
     complexity = method_complexity(environment.calculate_percept)
-    if randomness:
+    if environment.has_randomness:
         complexity += randomness_complexity
     return complexity / randomness_complexity
 
@@ -46,9 +46,9 @@ def get_random_bit() -> int:
     return pow(2, int(str(seed).replace('.', '')[-5:])) % 3 % 2
 
 
-def get_resources_path() -> Path:
+def get_data_path() -> Path:
     """Returns resources path."""
-    return Path(__file__).parent.parent.joinpath('resources')
+    return Path(__file__).parent.parent.joinpath('resources/data')
 
 
 def is_saved(training_step: int) -> bool:
@@ -60,4 +60,11 @@ def is_saved(training_step: int) -> bool:
     if math.log10(training_step * 2).is_integer():
         return True
     return False
+
+
+def nested_set(dic, keys, value):
+    """Sets a nested value in a dictionary"""
+    for key in keys[:-1]:
+        dic = dic.setdefault(key, {})
+    dic[keys[-1]] = value
 

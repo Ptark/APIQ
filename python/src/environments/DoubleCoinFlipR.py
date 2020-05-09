@@ -2,7 +2,7 @@ from typing import Tuple
 
 import random
 
-from python.src.environments.Environment import Environment
+from python.src.environments.abstract_classes.Environment import Environment
 
 
 class DoubleCoinFlipR(Environment):

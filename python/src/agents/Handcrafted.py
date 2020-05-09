@@ -1,40 +1,33 @@
 from typing import Tuple, Type
 
-from python.src.agents.Agent import Agent
-from python.src.environments.Environment import Environment
+from python.src.agents.abstract_classes.UntrainableAgent import UntrainableAgent
+from python.src.environments.abstract_classes.Environment import Environment
 
 
-class Handcrafted(Agent):
+class Handcrafted(UntrainableAgent):
     """Models an agent which takes handcrafted actions depending on environments"""
 
-    def __init__(self, environment_class: Type[Environment], sign_bit: str = "0", training_step: int = 0):
+    def __init__(self, environment_class: Type[Environment]):
         """Initiate switch dictionaries for choosing environment appropriate actions"""
-        super().__init__(environment_class, sign_bit, training_step)
+        super().__init__(environment_class)
         self.environment_switch = {
             "BiasedCoinFlip": self.biased_coin_flip,
+            "BiasedCoinFlipR": self.biased_coin_flip_reversed,
             "DoubleCoinFlip": self.double_coin_flip,
+            "DoubleCoinFlipR": self.double_coin_flip_reversed,
             "Slide": self.slide,
+            "SlideR": self.slide_reversed,
             "AnyOne": self.any_one,
+            "AnyOneR": self.any_one_reversed,
             "SpecificOne": self.specific_one,
+            "SpecificOneR": self.specific_one_reversed,
         }
-        self.environment_reversed_switch = {
-            "BiasedCoinFlip": self.biased_coin_flip_reversed,
-            "DoubleCoinFlip": self.double_coin_flip_reversed,
-            "Slide": self.slide_reversed,
-            "AnyOne": self.any_one_reversed,
-            "SpecificOne": self.specific_one_reversed,
-        }
-        self.environment_solver = None
         self.turn_counter = 0
 
     def calculate_action(self, percept: Tuple[str, str]) -> str:
         """Returns handcrafted actions depending on the environment"""
-        if self.turn_counter == 0:
-            if percept[1][0] == "0":
-                self.environment_solver = self.environment_switch.get
-            else:
-                self.environment_solver = self.environment_reversed_switch.get
-        action = self.environment_solver(self.environment_class.__name__)(percept)
+        getter = self.environment_switch.get
+        action = getter(self.environment_class.__name__)(percept)
         self.turn_counter += 1
         return action
 

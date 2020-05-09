@@ -1,5 +1,5 @@
 from typing import Tuple
-from python.src.environments.Environment import Environment
+from python.src.environments.abstract_classes.Environment import Environment
 
 
 class Slide(Environment):
