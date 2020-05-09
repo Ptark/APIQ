@@ -125,7 +125,8 @@ def calculate_rewards():
         for environment_class in environment_classes:
             ag_name, env_name = agent_class.__name__, environment_class.__name__
             for training_step in apiq_dict[ag_name][env_name]["training_steps"]:
-                agent_environment_step_tuples.add((agent_class, environment_class, training_step))
+                if apiq_dict[ag_name][env_name]["training_steps"][training_step] is None:
+                    agent_environment_step_tuples.add((agent_class, environment_class, training_step))
     with concurrent.futures.ProcessPoolExecutor() as executor:
         future_list = {executor.submit(rewards_agent_environment_step, triple[0], triple[1], triple[2]): triple for triple in agent_environment_step_tuples}
         for future in concurrent.futures.as_completed(future_list):
