@@ -11,7 +11,7 @@ randomness_complexity = 25
 
 def get_scaling_factor(environment: Environment) -> float:
     """Calculate the scaling factor from the complexity of an environment"""
-    return pow(2, -environment_complexity(environment))
+    return pow(2, -environment_complexity(environment) / randomness_complexity)
 
 
 def environment_complexity(environment: Environment) -> float:
@@ -22,7 +22,7 @@ def environment_complexity(environment: Environment) -> float:
     complexity = method_complexity(environment.calculate_percept)
     if environment.has_randomness:
         complexity += randomness_complexity
-    return complexity / randomness_complexity
+    return complexity
 
 
 def method_complexity(method: Callable) -> float:

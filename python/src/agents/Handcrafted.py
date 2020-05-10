@@ -21,6 +21,8 @@ class Handcrafted(UntrainableAgent):
             "AnyOneR": self.any_one_reversed,
             "SpecificOne": self.specific_one,
             "SpecificOneR": self.specific_one_reversed,
+            "Alternate": self.alternate,
+            "AlternateR": self.alternate_reversed,
         }
         self.turn_counter = 0
 
@@ -76,3 +78,11 @@ class Handcrafted(UntrainableAgent):
     def specific_one_reversed(self, percept: Tuple[str, str]):
         """Returns optimal action for reversed SpecificOne"""
         return "00"
+
+    def alternate(self, percept: Tuple[str, str]):
+        """Returns optimal actions for alternate"""
+        return "0" if self.turn_counter == 0 else "1"
+
+    def alternate_reversed(self, percept: Tuple[str, str]):
+        """Returns optimal actions for alternate"""
+        return "1" if self.turn_counter == 0 else "0"

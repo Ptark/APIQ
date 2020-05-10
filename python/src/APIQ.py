@@ -1,4 +1,5 @@
 import concurrent.futures
+import importlib
 import pickle
 import pprint
 from pathlib import Path
@@ -7,54 +8,22 @@ from typing import Type
 from python.src import Utility
 
 from python.src.agents.abstract_classes.Agent import Agent
-from python.src.agents.Handcrafted import Handcrafted
-from python.src.agents.NNtanh import NNtanh
-from python.src.agents.NNrelu import NNrelu
-from python.src.agents.NNrelu4 import NNrelu4
-from python.src.agents.NNsigmoid import NNsigmoid
-from python.src.agents.RandomActions import RandomActions
 from python.src.agents.abstract_classes.TrainableAgent import TrainableAgent
-
 from python.src.environments.abstract_classes.Environment import Environment
-from python.src.environments.Slide import Slide
-from python.src.environments.SlideR import SlideR
-from python.src.environments.AnyOne import AnyOne
-from python.src.environments.AnyOneR import AnyOneR
-from python.src.environments.SpecificOne import SpecificOne
-from python.src.environments.SpecificOneR import SpecificOneR
-from python.src.environments.BiasedCoinFlip import BiasedCoinFlip
-from python.src.environments.BiasedCoinFlipR import BiasedCoinFlipR
-from python.src.environments.DoubleCoinFlip import DoubleCoinFlip
-from python.src.environments.DoubleCoinFlipR import DoubleCoinFlipR
 
-number_of_evaluations = 1000
-training_steps = 1001
+number_of_evaluations = 10000
+training_steps = 100001
+
+agent_module = importlib.import_module("python.src.agents")
+environment_module = importlib.import_module("python.src.environments")
+agent_classes = {getattr(agent_module, class_name) for class_name in agent_module.__all__}
+environment_classes = {getattr(environment_module, class_name) for class_name in environment_module.__all__}
 
 data_dir_path = Utility.get_data_path()
 Path(data_dir_path).mkdir(parents=True, exist_ok=True)
 environment_scaling_factors = {}
 apiq_dict_path = data_dir_path.joinpath('apiq_dict.apiq')
 apiq_dict = pickle.load(apiq_dict_path.open("rb")) if apiq_dict_path.is_file() else {}
-agent_classes = [
-    RandomActions,
-    Handcrafted,
-    NNrelu,
-    NNrelu4,
-    NNsigmoid,
-    NNtanh
-]
-environment_classes = [
-    BiasedCoinFlip,
-    BiasedCoinFlipR,
-    DoubleCoinFlip,
-    DoubleCoinFlipR,
-    Slide,
-    SlideR,
-    AnyOne,
-    AnyOneR,
-    SpecificOne,
-    SpecificOneR,
-]
 
 
 def calculate_scaling_factors():
@@ -161,8 +130,7 @@ def calculate_apiq():
     """Calculates APIQ for all agents from apiq_dict"""
     print("Calculating APIQ...")
     pprint.pprint(apiq_dict)
-    norming_factor = sum(environment_scaling_factors.values())
-
+    norming_factor = 0.5 * sum(environment_scaling_factors.values())
     for agent_class in agent_classes:
         apiq_dict[agent_class.__name__]["apiq"] = {}
         ag_name = agent_class.__name__
