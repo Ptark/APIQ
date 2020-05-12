@@ -20,7 +20,7 @@ class NeuralNetwork:
             activation_name: name for switch which chooses activation function
             hidden_size: size of the hidden layer [number of layers, neurons per layer]
         """
-        std = 0.1
+        std = 0.01
         self.size = size
         self.learning_rate = 1e-1
         self.activation_function = self.activation_function_switch.get(activation_name)[0]

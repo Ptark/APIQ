@@ -1,6 +1,5 @@
-from pathlib import Path
-
 import numpy as np
+from numpy.linalg import norm
 
 
 def dtanh(array):
@@ -57,6 +56,6 @@ def narray_to_bitstr(narray: np.ndarray) -> str:
 
 def loss(output, label):
     """Mean squared loss function"""
-    dif = output - label
-    return float(0.5 * np.dot(dif.T, dif))
+    dif = norm(label - output)
+    return float(0.5 * dif * dif)
 
