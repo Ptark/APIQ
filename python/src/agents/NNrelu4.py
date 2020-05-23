@@ -8,6 +8,6 @@ from python.src.environments.abstract_classes.Environment import Environment
 class NNrelu4(NNAgent):
     """Neural Network based agent with hidden layers"""
 
-    def __init__(self, environment_class: Type[Environment], path: Path = ''):
+    def __init__(self, environment_class: Type[Environment]):
         """Initialize NNAgent with given parameters"""
-        super().__init__(environment_class, path=path, activation_name="relu", hidden_size=[4])
+        super().__init__(environment_class, activation_name="relu", hidden_size=[4])

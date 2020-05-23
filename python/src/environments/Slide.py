@@ -9,10 +9,9 @@ class Slide(Environment):
     observation_length = 1
     reward_length = 4
     action_length = 1
-    sign_bit = "0"
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, sign_bit: str = "0"):
+        super().__init__(sign_bit)
         self.at_top = False
 
     def calculate_percept(self, action: str) \
@@ -21,14 +20,14 @@ class Slide(Environment):
         climbing up and sliding down"""
         if self.at_top is False:
             if action[-1] == "0":
-                return "0", Slide.sign_bit + "001"
+                return "0", self.sign_bit + "001"
             else:
                 self.at_top = True
-                return "1", Slide.sign_bit + "000"
+                return "1", self.sign_bit + "000"
         else:
             if action[-1] == "0":
-                return "1", Slide.sign_bit + "000"
+                return "1", self.sign_bit + "000"
             else:
                 self.at_top = False
-                return "0", Slide.sign_bit + "100"
+                return "0", self.sign_bit + "100"
 

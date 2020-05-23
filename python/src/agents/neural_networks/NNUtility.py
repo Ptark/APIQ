@@ -2,13 +2,6 @@ import numpy as np
 from numpy.linalg import norm
 
 
-def dtanh(array):
-    """Derivative of tanh activation function."""
-    for idx in range(len(array)):
-        array[idx, 0] = 1 - array[idx, 0] * array[idx, 0]
-    return array
-
-
 def sigmoid(array: np.ndarray):
     """Sigmoid activation function."""
     for idx in range(len(array)):

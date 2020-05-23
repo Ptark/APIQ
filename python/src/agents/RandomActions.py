@@ -1,14 +1,12 @@
 from typing import Tuple, Type
 import random
 
-from python.src.agents.abstract_classes.UntrainableAgent import UntrainableAgent
+from python.src.agents.abstract_classes.Agent import Agent
 from python.src.environments.abstract_classes.Environment import Environment
 
 
-class RandomActions(UntrainableAgent):
+class RandomActions(Agent):
     """Models an agent which takes handcrafted actions depending on environments"""
-
-    has_randomness = True
 
     def __init__(self, environment_class: Type[Environment]):
         super().__init__(environment_class)

@@ -1,5 +1,3 @@
-import pickle
-from pathlib import Path
 from typing import List, Tuple
 
 import numpy as np
@@ -11,7 +9,6 @@ class NeuralNetwork:
     activation_function_switch = {
         "sigmoid": [NNUtility.sigmoid, NNUtility.dsigmoid],
         "relu": [NNUtility.relu, NNUtility.drelu],
-        "tanh": [np.tanh, NNUtility.dtanh]
     }
 
     def __init__(self, activation_name: str, size: [int]):
@@ -84,16 +81,3 @@ class NeuralNetwork:
             self.biases[idx] = self.biases[idx] - dbiases[idx] * self.learning_rate
         return dweights, dbiases
 
-    def save_weights(self, path: Path):
-        """Save weights to a file"""
-        weight_dict = {
-            "weights": self.weights,
-            "biases": self.biases
-        }
-        pickle.dump(weight_dict, path.open("wb"))
-
-    def load_weights(self, path: Path):
-        """Loads weights from a file"""
-        weight_dict = pickle.load(path.open("rb"))
-        self.weights = weight_dict.get("weights")
-        self.biases = weight_dict.get("biases")
