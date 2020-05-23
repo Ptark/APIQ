@@ -70,16 +70,14 @@ def trial_agent_environment(pair: Tuple[Type[Agent], Type[Environment]], sign_bi
     """Trial agent in environment"""
     agent_class, environment_class = pair[0], pair[1]
     total_reward = 0
-    agent = agent_class(environment_class=environment_class)
     environment = environment_class(sign_bit)
-    observation = "1" * environment.observation_length
-    reward = sign_bit + "0" * (environment.reward_length - 1)
-    percept = (observation, reward)
+    agent = agent_class(environment=environment)
+    observation = "0" * environment.observation_length
     for i in range(number_of_cycles):
-        action = agent.calculate_action(percept)
-        percept = environment.calculate_percept(action)
-        total_reward += Utility.get_reward_from_bitstring(percept[1])
-        agent.train(percept[1])
+        action = agent.calculate_action(observation)
+        observation, reward = environment.calculate_percept(action)
+        total_reward += Utility.get_reward_from_bitstring(reward)
+        agent.train(reward)
     total_reward /= number_of_cycles
     return agent_class.__name__, environment_class.__name__, total_reward, sign_bit
 
@@ -91,7 +89,7 @@ def pairs_to_be_trialed() -> set:
         ag_name = agent_class.__name__
         reward_dict.setdefault(ag_name, {})
         for environment_class in environment_classes:
-            if environment_class not in reward_dict[ag_name]:
+            if environment_class.__name__ not in reward_dict[ag_name]:
                 agent_environment_pairs.add((agent_class, environment_class))
     return agent_environment_pairs
 

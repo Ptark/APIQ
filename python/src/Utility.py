@@ -2,6 +2,7 @@ import dis
 import time
 import math
 from pathlib import Path
+import random
 from typing import Callable
 
 from python.src.environments.abstract_classes.Environment import Environment
@@ -68,3 +69,10 @@ def nested_set(dic, keys, value):
         dic = dic.setdefault(key, {})
     dic[keys[-1]] = value
 
+
+def random_action(length: int) -> str:
+    """Returns a random action"""
+    action = ''
+    for i in range(length):
+        action += str(random.randint(0, 1))
+    return action
