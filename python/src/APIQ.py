@@ -27,18 +27,15 @@ def apiq():
     """Trials agents in environments and calculates apiq from results"""
     print("----------------------------------------")
     print("Calculate scaling factors")
-    print("----------------------------------------")
     environment_scaling_factors = calculate_scaling_factors()
     pprint.pprint(environment_scaling_factors)
     print("----------------------------------------")
     print("Trial agents in environments")
-    print("----------------------------------------")
     trials()
     pprint.pprint(reward_dict)
     pickle.dump(reward_dict, reward_dict_path.open("wb"))
     print("----------------------------------------")
     print("Calculate apiq")
-    print("----------------------------------------")
     apiq_dict = {}
     norming_factor = sum(environment_scaling_factors.values())
     for ag_name in reward_dict:
@@ -79,6 +76,7 @@ def trial_agent_environment(pair: Tuple[Type[Agent], Type[Environment]], sign_bi
         total_reward += Utility.get_reward_from_bitstring(reward)
         agent.train(reward)
     total_reward /= number_of_cycles
+    print("    %s in %s done." % (agent_class.__name__, environment_class.__name__))
     return agent_class.__name__, environment_class.__name__, total_reward, sign_bit
 
 

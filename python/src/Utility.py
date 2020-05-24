@@ -1,4 +1,5 @@
 import dis
+import heapq
 import time
 import math
 from pathlib import Path
@@ -89,3 +90,12 @@ def random_action(length: int) -> str:
     for i in range(length):
         action += str(random.randint(0, 1))
     return action
+
+
+def init_heap(length: int):
+    """initialize action heap for pi agents"""
+    reward_statistics = []
+    for action_idx in range(pow(2, length)):
+        action = get_bitstring_from_decimal(action_idx, length)
+        heapq.heappush(reward_statistics, (1, action, 0))
+    return reward_statistics

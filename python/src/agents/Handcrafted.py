@@ -19,13 +19,14 @@ class Handcrafted(Agent):
             "AnyOne1": self.any_one_reversed,
             "SpecificOne0": self.specific_one,
             "SpecificOne1": self.specific_one_reversed,
+            "Switch0": self.switch,
+            "Switch1": self.switch_reversed,
             "Alternate0": self.alternate,
             "Alternate1": self.alternate_reversed,
-            "AlternateHidden0": self.alternate_hidden,
-            "AlternateHidden1": self.alternate_hidden_reversed,
         }
         self.sign_bit = self.environment.sign_bit
         self.turn_counter = 0
+        self.boolean = True
 
     def calculate_action(self, observation: str) -> str:
         """Returns handcrafted actions depending on the environment"""
@@ -77,18 +78,23 @@ class Handcrafted(Agent):
         """Returns optimal action for reversed SpecificOne"""
         return "00"
 
+    def switch(self, observation: str):
+        """Returns optimal actions for switch"""
+        return "0" if self.turn_counter % 2 == 0 else "1"
+
+    def switch_reversed(self, observation: str):
+        """Returns optimal actions for switch reversed"""
+        return "1" if self.turn_counter % 2 == 0 else "0"
+
     def alternate(self, observation: str):
         """Returns optimal actions for alternate"""
-        return "0" if self.turn_counter % 2 == 0 else "1"
+        if self.boolean:
+            self.boolean = False
+            return "0"
+        else:
+            self.boolean = True
+            return "1"
 
     def alternate_reversed(self, observation: str):
-        """Returns optimal actions for alternate"""
-        return "1" if self.turn_counter % 2 == 0 else "0"
-
-    def alternate_hidden(self, observation: str):
-        """Returns optimal actions for alternate"""
-        return "0" if self.turn_counter % 2 == 0 else "1"
-
-    def alternate_hidden_reversed(self, observation: str):
-        """Returns optimal actions for alternate"""
-        return "1" if self.turn_counter % 2 == 0 else "0"
+        """Returns optimal actions for alternate reversed"""
+        return "1"
