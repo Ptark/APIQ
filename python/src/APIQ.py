@@ -18,22 +18,34 @@ environment_classes = {getattr(environment_module, class_name) for class_name in
 
 data_dir_path = Utility.get_data_path()
 Path(data_dir_path).mkdir(parents=True, exist_ok=True)
-reward_dict_path = data_dir_path.joinpath('reward_dict.apiq')
 apiq_dict_path = data_dir_path.joinpath('apiq_dict.apiq')
-reward_dict = pickle.load(reward_dict_path.open("rb")) if reward_dict_path.is_file() else {}
+
+# Loads already evaluated agent-environment combinations into reward dict
+reward_dict = {}
+for ag_class in agent_classes:
+    ag = ag_class.__name__
+    for env_class in environment_classes:
+        env = env_class.__name__
+        path = data_dir_path.joinpath(ag + "_" + env + ".apiq")
+        if path.is_file():
+            rewards = pickle.load(path.open("rb"))
+            Utility.nested_set(reward_dict, [ag, env], rewards)
 
 
 def apiq():
     """Trials agents in environments and calculates apiq from results"""
     print("----------------------------------------")
-    print("Calculate scaling factors")
-    environment_scaling_factors = calculate_scaling_factors()
-    pprint.pprint(environment_scaling_factors)
-    print("----------------------------------------")
     print("Trial agents in environments")
     trials()
     pprint.pprint(reward_dict)
-    pickle.dump(reward_dict, reward_dict_path.open("wb"))
+    for ag_name in reward_dict:
+        for env_name in reward_dict[ag_name]:
+            path = data_dir_path.joinpath(ag_name + "_" + env_name + ".apiq")
+            pickle.dump(reward_dict[ag_name][env_name], path.open("wb"))
+    print("----------------------------------------")
+    print("Calculate scaling factors")
+    environment_scaling_factors = calculate_scaling_factors()
+    pprint.pprint(environment_scaling_factors)
     print("----------------------------------------")
     print("Calculate apiq")
     apiq_dict = {}
