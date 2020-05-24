@@ -41,6 +41,19 @@ def get_reward_from_bitstring(s: str) -> float:
     return sign * reward
 
 
+def get_decimal_from_bitstring(s: str) -> float:
+    """Calculate decimal number from bitstring"""
+    decimal = 0
+    for idx in range((len(s) - 1)):
+        decimal += int(s[len(s) - 1 - idx]) * pow(2, idx)
+    return decimal
+
+
+def get_bitstring_from_decimal(decimal: int, length: int):
+    """Calculate bitstring from decimal"""
+    return format(decimal, 'b').zfill(length)
+
+
 def get_random_bit() -> int:
     """Returns a pseudorandom bit from a timestamp"""
     seed = time.time()

@@ -1,4 +1,4 @@
 .idea/*
 *.pyc
 python/src/agents/__pycache__/
-apiq_dict.apiq
+*.apiq

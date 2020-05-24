@@ -19,11 +19,12 @@ class PiBasic(Agent):
     def __init__(self, environment: Environment):
         super().__init__(environment)
         self.table = self.init_table()
-        self.observation = ''
+        self.observation = "0" * self.environment.observation_length
         self.action_statistic = (1, '', 0)
 
     def calculate_action(self, observation: str) -> str:
-        """Returns handcrafted actions depending on the environment"""
+        """ 10% of the time return random action.
+            90% of the time return action with most expected reward for observation"""
         self.observation = observation
         if random.randint(0, 9) == 0:
             idx = random.randint(0, len(self.table[observation]) - 1)
@@ -41,7 +42,7 @@ class PiBasic(Agent):
         action = self.action_statistic[1]
         cnt = self.action_statistic[2]
         new_expected_reward = (expected_reward * cnt + reward_value) / (cnt + 1)
-        heapq.heappush(self.table[self.observation], (new_expected_reward, action, cnt))
+        heapq.heappush(self.table[self.observation], (new_expected_reward, action, cnt + 1))
 
     def init_table(self) -> dict:
         """Returns a dict where every observation has an ordered list of actions with rewards"""
