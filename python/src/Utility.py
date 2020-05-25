@@ -11,12 +11,7 @@ from python.src.environments.abstract_classes.Environment import Environment
 randomness_complexity = 25
 
 
-def get_scaling_factor(environment: Environment) -> float:
-    """Calculate the scaling factor from the complexity of an environment"""
-    return pow(2, -environment_complexity(environment) / randomness_complexity)
-
-
-def environment_complexity(environment: Environment) -> float:
+def calculate_complexity(environment: Environment) -> float:
     """Estimate complexity of an environment depending on its calculate_action method and use of random.
     Complexity is measured in bytecode instructions.
     One instruction has 2 byte.
@@ -56,7 +51,7 @@ def get_bitstring_from_decimal(decimal: int, length: int):
 
 
 def get_random_bit() -> int:
-    """Returns a pseudorandom bit from a timestamp"""
+    """Returns a pseudorandom bit from a timestamp. Used for calculating random bit complexity"""
     seed = time.time()
     return pow(2, int(str(seed).replace('.', '')[-5:])) % 3 % 2
 

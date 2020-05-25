@@ -10,6 +10,7 @@ from python.src.agents.abstract_classes.Agent import Agent
 from python.src.environments.abstract_classes.Environment import Environment
 
 number_of_cycles = 100000
+floating_precision_factor = 25
 
 agent_module = importlib.import_module("python.src.agents")
 environment_module = importlib.import_module("python.src.environments")
@@ -44,8 +45,9 @@ def apiq():
             pickle.dump(reward_dict[ag_name][env_name], data_path.open("wb"))
     print("----------------------------------------")
     print("Calculate scaling factors")
-    environment_scaling_factors = calculate_scaling_factors()
-    pprint.pprint(environment_scaling_factors)
+    environment_complexities = calculate_complexities()
+    pprint.pprint(environment_complexities)
+    environment_scaling_factors = calculate_scaling_factors(environment_complexities)
     print("----------------------------------------")
     print("Calculate apiq")
     apiq_dict = {}
@@ -104,10 +106,17 @@ def pairs_to_be_trialed() -> set:
     return agent_environment_pairs
 
 
-def calculate_scaling_factors() -> dict:
-    """Calculates scaling factors for all environments and saves them in a dictionary"""
-    environment_scaling_factors = {}
+def calculate_complexities() -> dict:
+    """Calculates complexities for all environments and saves them in a dictionary"""
+    environment_complexities = {}
     for environment_class in environment_classes:
-        scaling_factor = Utility.get_scaling_factor(environment_class())
-        environment_scaling_factors[environment_class.__name__] = scaling_factor
-    return environment_scaling_factors
+        complexity = Utility.calculate_complexity(environment_class())
+        environment_complexities[environment_class.__name__] = complexity
+    return environment_complexities
+
+
+def calculate_scaling_factors(dic: dict) -> dict:
+    """Calculates scaling factors for all environments from complexities and saves them in a dictionary"""
+    for env_name in dic:
+        dic[env_name] = pow(2, -dic[env_name] / floating_precision_factor)
+    return dic
