@@ -9,6 +9,7 @@ class Environment(ABC):
     observation_length = 0
     reward_length = 2
     action_length = 1
+    max_average_reward_per_cycle = 1
 
     @abstractmethod
     def __init__(self, sign_bit: str):

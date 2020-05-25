@@ -9,6 +9,7 @@ class Slide(Environment):
     observation_length = 1
     reward_length = 4
     action_length = 1
+    max_average_reward_per_cycle = 0.5
 
     def __init__(self, sign_bit: str = "0"):
         super().__init__(sign_bit)

@@ -25,6 +25,8 @@ class Handcrafted(Agent):
             "Alternate1": self.alternate_reversed,
             "Button0": self.button,
             "Button1": self.button_reversed,
+            "CombinationTwo0": self.combination_two,
+            "CombinationTwo1": self.combination_two_reversed,
         }
         self.sign_bit = self.environment.sign_bit
         self.turn_counter = 0
@@ -115,3 +117,16 @@ class Handcrafted(Agent):
     def button_reversed(self, observation: str) -> str:
         """Returns optimal actions for button"""
         return "0"
+
+    def combination_two(self, observation: str) -> str:
+        """Returns optimal actions for combination_two"""
+        if self.boolean:
+            self.boolean = False
+            return "01"
+        else:
+            self.boolean = True
+            return "11"
+
+    def combination_two_reversed(self, observation: str) -> str:
+        """Returns optimal actions for combination_two_reversed"""
+        return "00"

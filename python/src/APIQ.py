@@ -89,7 +89,7 @@ def trial_agent_environment(pair: Tuple[Type[Agent], Type[Environment]], sign_bi
         observation, reward = environment.calculate_percept(action)
         total_reward += Utility.get_reward_from_bitstring(reward)
         agent.train(reward)
-    total_reward /= number_of_cycles
+    total_reward /= number_of_cycles * environment_class.max_average_reward_per_cycle
     print("    %s in %s done." % (agent_class.__name__, environment_class.__name__))
     return agent_class.__name__, environment_class.__name__, total_reward, sign_bit
 
