@@ -31,7 +31,12 @@ class Handcrafted(Agent):
     def calculate_action(self, observation: str) -> str:
         """Returns handcrafted actions depending on the environment"""
         getter = self.environment_switch.get
-        action = getter(self.environment.__class__.__name__ + self.sign_bit)(observation)
+        try:
+            action = getter(self.environment.__class__.__name__ + self.sign_bit)(observation)
+        except KeyError:
+            print("Handcrafted needs implementation for %s" % self.environment.__class__.__name__)
+            print("Implement it and delete the relevant save files in python/resources/data")
+            action = "0" * self.environment.action_length
         self.turn_counter += 1
         return action
 

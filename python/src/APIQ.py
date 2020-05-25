@@ -40,8 +40,8 @@ def apiq():
     pprint.pprint(reward_dict)
     for ag_name in reward_dict:
         for env_name in reward_dict[ag_name]:
-            path = data_dir_path.joinpath(ag_name + "_" + env_name + ".apiq")
-            pickle.dump(reward_dict[ag_name][env_name], path.open("wb"))
+            data_path = data_dir_path.joinpath(ag_name + "_" + env_name + ".apiq")
+            pickle.dump(reward_dict[ag_name][env_name], data_path.open("wb"))
     print("----------------------------------------")
     print("Calculate scaling factors")
     environment_scaling_factors = calculate_scaling_factors()
