@@ -23,75 +23,79 @@ class Handcrafted(Agent):
             "Switch1": self.switch_reversed,
             "Alternate0": self.alternate,
             "Alternate1": self.alternate_reversed,
+            "Button0": self.button,
+            "Button1": self.button_reversed,
         }
         self.sign_bit = self.environment.sign_bit
         self.turn_counter = 0
         self.boolean = True
+        self.method = self.environment_switch.get(self.environment.__class__.__name__ + self.sign_bit)
+        if self.method is None:
+            print("!!!")
+            print("Handcrafted needs implementation for %s" % self.environment.__class__.__name__)
+            print("Implement it and delete the relevant save files in python/resources/data")
 
     def calculate_action(self, observation: str) -> str:
         """Returns handcrafted actions depending on the environment"""
-        getter = self.environment_switch.get
         try:
-            action = getter(self.environment.__class__.__name__ + self.sign_bit)(observation)
-        except KeyError:
-            print("Handcrafted needs implementation for %s" % self.environment.__class__.__name__)
-            print("Implement it and delete the relevant save files in python/resources/data")
+            action = self.method(observation)
+        except TypeError:
             action = "0" * self.environment.action_length
         self.turn_counter += 1
         return action
 
-    def biased_coin_flip(self, observation: str):
+    def biased_coin_flip(self, observation: str) -> str:
         """Returns optimal actions for the biased coin flip"""
         return "1"
 
-    def biased_coin_flip_reversed(self, observation: str):
+    def biased_coin_flip_reversed(self, observation: str) -> str:
         """Returns optimal actions for the reversed biased coin flip"""
         return "0"
 
-    def double_coin_flip(self, observation: str):
+    def double_coin_flip(self, observation: str) -> str:
         """Returns optimal actions for the double coin flip"""
         return "01"
 
-    def double_coin_flip_reversed(self, observation: str):
+    def double_coin_flip_reversed(self, observation: str) -> str:
         """Returns optimal actions for the double coin flip"""
         return "00"
 
-    def slide(self, observation: str):
+    def slide(self, observation: str) -> str:
         """Returns optimal actions for the Slide"""
         return "1"
 
-    def slide_reversed(self, observation: str):
+    def slide_reversed(self, observation: str) -> str:
         """Returns optimal actions for the Slide"""
         if self.turn_counter == 0:
             return "1"
         else:
             return "0"
 
-    def any_one(self, observation: str):
+    def any_one(self, observation: str) -> str:
         """Returns optimal action for AnyOne"""
         return "11"
 
-    def any_one_reversed(self, observation: str):
+    def any_one_reversed(self, observation: str) -> str:
         """Returns optimal action for reversed AnyOne"""
         return "00"
 
-    def specific_one(self, observation: str):
+    def specific_one(self, observation: str) -> str:
         """Returns optimal action for SpecificOne"""
         return "11"
 
-    def specific_one_reversed(self, observation: str):
+    def specific_one_reversed(self, observation: str) -> str:
         """Returns optimal action for reversed SpecificOne"""
         return "00"
 
-    def switch(self, observation: str):
+    def switch(self, observation: str) -> str:
         """Returns optimal actions for switch"""
         return "0" if self.turn_counter % 2 == 0 else "1"
 
-    def switch_reversed(self, observation: str):
+    def switch_reversed(self, observation: str) -> str:
         """Returns optimal actions for switch reversed"""
         return "1" if self.turn_counter % 2 == 0 else "0"
 
-    def alternate(self, observation: str):
+    def alternate(self, observation: str) -> str:
         """Returns optimal actions for alternate"""
         if self.boolean:
             self.boolean = False
@@ -100,6 +104,14 @@ class Handcrafted(Agent):
             self.boolean = True
             return "1"
 
-    def alternate_reversed(self, observation: str):
+    def alternate_reversed(self, observation: str) -> str:
         """Returns optimal actions for alternate reversed"""
         return "1"
+
+    def button(self, observation: str) -> str:
+        """Returns optimal actions for button"""
+        return "1"
+
+    def button_reversed(self, observation: str) -> str:
+        """Returns optimal actions for button"""
+        return "0"
