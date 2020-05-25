@@ -99,3 +99,48 @@ def init_heap(length: int):
         action = get_bitstring_from_decimal(action_idx, length)
         heapq.heappush(reward_statistics, (1, action, 0))
     return reward_statistics
+
+
+def heapq_siftdown(heap, startpos, pos):
+    """Taken from heapq internal code since it might be deprecated
+    https://hg.python.org/cpython/file/3.6/Lib/heapq.py
+    Implements decrease_key"""
+    newitem = heap[pos]
+    # Follow the path to the root, moving parents down until finding a place
+    # newitem fits.
+    while pos > startpos:
+        parentpos = (pos - 1) >> 1
+        parent = heap[parentpos]
+        if newitem < parent:
+            heap[pos] = parent
+            pos = parentpos
+            continue
+        break
+    heap[pos] = newitem
+
+
+def heapq_siftup(heap, pos):
+    """Taken from heapq internal code since it might be deprecated.
+    https://hg.python.org/cpython/file/3.6/Lib/heapq.py
+    Implements increase_key"""
+    endpos = len(heap)
+    startpos = pos
+    newitem = heap[pos]
+    # Bubble up the smaller child until hitting a leaf.
+    childpos = 2*pos + 1    # leftmost child position
+    while childpos < endpos:
+        # Set childpos to index of smaller child.
+        rightpos = childpos + 1
+        if rightpos < endpos and not heap[childpos] < heap[rightpos]:
+            childpos = rightpos
+        # Move the smaller child up.
+        heap[pos] = heap[childpos]
+        pos = childpos
+        childpos = 2*pos + 1
+    # The leaf at pos is empty now.  Put newitem there, and bubble it up
+    # to its final resting place (by sifting its parents down).
+    heap[pos] = newitem
+    heapq_siftdown(heap, startpos, pos)
+
+
+

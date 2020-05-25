@@ -6,7 +6,8 @@ from python.src.environments.abstract_classes.Environment import Environment
 
 
 class Pi2Back(Agent):
-    """The agent keeping a table with (observation action reward)^2 statistics"""
+    """The agent keeping a table with reward statistics depending on the
+    last observation and action"""
 
     def __init__(self, environment: Environment):
         super().__init__(environment)
@@ -48,7 +49,7 @@ class Pi2Back(Agent):
         heapq.heappush(self.table[self.l_o][self.l_a][self.o], (new_expected_reward, action, cnt + 1))
 
     def init_table(self) -> dict:
-        """Returns a dict where every observation has an ordered list of actions with rewards"""
+        """Returns a dict with reward statistics for every combination of oao|ar"""
         table = {}
         a_length = self.environment.action_length
         o_length = self.environment.observation_length
