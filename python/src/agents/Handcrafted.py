@@ -27,6 +27,10 @@ class Handcrafted(Agent):
             "Button1": self.button_reversed,
             "CombinationTwo0": self.combination_two,
             "CombinationTwo1": self.combination_two_reversed,
+            "CombinationThree0": self.combination_three,
+            "CombinationThree1": self.combination_three_reversed,
+            "CombinationFour0": self.combination_four,
+            "CombinationFour1": self.combination_four_reversed,
         }
         self.sign_bit = self.environment.sign_bit
         self.turn_counter = 0
@@ -129,4 +133,30 @@ class Handcrafted(Agent):
 
     def combination_two_reversed(self, observation: str) -> str:
         """Returns optimal actions for combination_two_reversed"""
+        return "00"
+
+    def combination_three(self, observation: str) -> str:
+        """Returns optimal actions for combination_three"""
+        if self.turn_counter % 3 == 0:
+            return "10"
+        elif (self.turn_counter + 2) % 3 == 0:
+            return "00"
+        return "11"
+
+    def combination_three_reversed(self, observation: str) -> str:
+        """Returns optimal actions for combination_three_reversed"""
+        return "00"
+
+    def combination_four(self, observation: str) -> str:
+        """Returns optimal actions for combination_four"""
+        if self.turn_counter % 4 == 0:
+            return "01"
+        elif (self.turn_counter + 3) % 4 == 0:
+            return "00"
+        elif (self.turn_counter + 2) % 4 == 0:
+            return "00"
+        return "11"
+
+    def combination_four_reversed(self, observation: str) -> str:
+        """Returns optimal actions for combination_three_reversed"""
         return "00"

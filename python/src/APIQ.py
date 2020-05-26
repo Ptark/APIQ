@@ -36,7 +36,7 @@ for ag_class in agent_classes:
 def apiq():
     """Trials agents in environments and calculates apiq from results"""
     print("----------------------------------------")
-    print("Trial agents in environments")
+    print("Trialing agents in environments...")
     trials()
     pprint.pprint(reward_dict)
     for ag_name in reward_dict:
@@ -44,12 +44,12 @@ def apiq():
             data_path = data_dir_path.joinpath(ag_name + "_" + env_name + ".apiq")
             pickle.dump(reward_dict[ag_name][env_name], data_path.open("wb"))
     print("----------------------------------------")
-    print("Calculate scaling factors")
+    print("Environment Complexities (Python Bytecode instructions)")
     environment_complexities = calculate_complexities()
     pprint.pprint(environment_complexities)
     environment_scaling_factors = calculate_scaling_factors(environment_complexities)
     print("----------------------------------------")
-    print("Calculate apiq")
+    print("APIQ")
     apiq_dict = {}
     norming_factor = sum(environment_scaling_factors.values())
     for ag_name in reward_dict:
