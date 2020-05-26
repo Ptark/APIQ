@@ -4,7 +4,6 @@ from python.src.environments.abstract_classes.Environment import Environment
 
 class Alternate(Environment):
 
-    number_of_turns = 2
     observation_length = 0
     reward_length = 2
     action_length = 1

@@ -2,7 +2,7 @@ from typing import Tuple
 from python.src.environments.abstract_classes.Environment import Environment
 
 
-class Slide(Environment):
+class Ramp(Environment):
     """Class models a slide which increases reward if you climb the ladder first."""
 
     observation_length = 1

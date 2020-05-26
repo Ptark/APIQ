@@ -15,6 +15,8 @@ class Handcrafted(Agent):
             "DoubleCoinFlip1": self.double_coin_flip_reversed,
             "Slide0": self.slide,
             "Slide1": self.slide_reversed,
+            "SlideTwo0": self.slide_two,
+            "SlideTwo1": self.slide_two_reversed,
             "AnyOne0": self.any_one,
             "AnyOne1": self.any_one_reversed,
             "SpecificOne0": self.specific_one,
@@ -72,10 +74,15 @@ class Handcrafted(Agent):
 
     def slide_reversed(self, observation: str) -> str:
         """Returns optimal actions for the Slide"""
-        if self.turn_counter == 0:
-            return "1"
-        else:
-            return "0"
+        return "0"
+
+    def slide_two(self, observation: str) -> str:
+        """Returns optimal actions for the SlideTwo"""
+        return "1"
+
+    def slide_two_reversed(self, observation: str) -> str:
+        """Returns optimal actions for SlideTwoReversed"""
+        return "0"
 
     def any_one(self, observation: str) -> str:
         """Returns optimal action for AnyOne"""

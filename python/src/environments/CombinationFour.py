@@ -5,7 +5,6 @@ from python.src.environments.abstract_classes.Environment import Environment
 class CombinationFour(Environment):
     """Class models a safe with a 4 number combination"""
 
-    number_of_turns = 3
     observation_length = 0
     reward_length = 2
     action_length = 2
