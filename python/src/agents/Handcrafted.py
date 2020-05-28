@@ -39,6 +39,8 @@ class Handcrafted(Agent):
             "Labyrinth1": (self.labyrinth_reversed, self.trainer_pass),
             "LabyrinthCoord0": (self.labyrinth, self.trainer_pass),
             "LabyrinthCoord1": (self.labyrinth_reversed, self.trainer_pass),
+            "LabyrinthLoop0": (self.labyrinth_loop, self.trainer_pass),
+            "LabyrinthLoop1": (self.labyrinth_loop_reversed, self.trainer_pass),
         }
         self.sign_bit = self.environment.sign_bit
         self.turn_counter = 0
@@ -231,4 +233,16 @@ class Handcrafted(Agent):
 
     def labyrinth_coord_reversed(self, observation: str) -> str:
         """Returns optimal actions for labyrinth_coord_reversed"""
+        return "00"
+
+    def labyrinth_loop(self, observation: str) -> str:
+        """Returns optimal actions for labyrinth_loop"""
+        self.boolean = not self.boolean
+        if self.boolean:
+            return "00"
+        else:
+            return "01"
+
+    def labyrinth_loop_reversed(self, observation: str) -> str:
+        """Returns optimal actions for labyrinth_loop_reversed"""
         return "00"

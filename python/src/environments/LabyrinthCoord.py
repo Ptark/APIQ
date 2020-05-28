@@ -27,7 +27,7 @@ class LabyrinthCoord(Environment):
             self.coord[0] += 1  # right
         if action == "11":
             self.coord[1] += 1  # up
-        for idx in range(len(self.coord)):
+        for idx in range(2):
             if self.coord[idx] < 0:
                 self.coord[idx] = 0
             if self.coord[idx] > 3:
