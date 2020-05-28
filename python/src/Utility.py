@@ -45,7 +45,7 @@ def get_decimal_from_bitstring(s: str) -> float:
     return decimal
 
 
-def get_bitstring_from_decimal(decimal: int, length: int):
+def get_bitstring_from_decimal(decimal: int, length: int) -> str:
     """Calculate bitstring from decimal"""
     return format(decimal, 'b').zfill(length)
 

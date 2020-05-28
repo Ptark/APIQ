@@ -9,32 +9,36 @@ class Handcrafted(Agent):
         """Initiate switch dictionaries for choosing environment appropriate actions"""
         super().__init__(environment)
         self.environment_switch = {
-            "BiasedCoinFlip0": (self.biased_coin_flip, self.trainer_dummy),
-            "BiasedCoinFlip1": (self.biased_coin_flip_reversed, self.trainer_dummy),
-            "DoubleCoinFlip0": (self.double_coin_flip, self.trainer_dummy),
-            "DoubleCoinFlip1": (self.double_coin_flip_reversed, self.trainer_dummy),
-            "Slide0": (self.slide, self.trainer_dummy),
-            "Slide1": (self.slide_reversed, self.trainer_dummy),
-            "SlideTwo0": (self.slide_two, self.trainer_dummy),
-            "SlideTwo1": (self.slide_two_reversed, self.trainer_dummy),
-            "AnyOne0": (self.any_one, self.trainer_dummy),
-            "AnyOne1": (self.any_one_reversed, self.trainer_dummy),
-            "SpecificOne0": (self.specific_one, self.trainer_dummy),
-            "SpecificOne1": (self.specific_one_reversed, self.trainer_dummy),
-            "Switch0": (self.switch, self.trainer_dummy),
-            "Switch1": (self.switch_reversed, self.trainer_dummy),
-            "Alternate0": (self.alternate, self.trainer_dummy),
-            "Alternate1": (self.alternate_reversed, self.trainer_dummy),
-            "Button0": (self.button, self.trainer_dummy),
-            "Button1": (self.button_reversed, self.trainer_dummy),
-            "CombinationTwo0": (self.combination_two, self.trainer_dummy),
-            "CombinationTwo1": (self.combination_two_reversed, self.trainer_dummy),
-            "CombinationThree0": (self.combination_three, self.trainer_dummy),
-            "CombinationThree1": (self.combination_three_reversed, self.trainer_dummy),
-            "CombinationFour0": (self.combination_four, self.trainer_dummy),
-            "CombinationFour1": (self.combination_four_reversed, self.trainer_dummy),
+            "BiasedCoinFlip0": (self.biased_coin_flip, self.trainer_pass),
+            "BiasedCoinFlip1": (self.biased_coin_flip_reversed, self.trainer_pass),
+            "DoubleCoinFlip0": (self.double_coin_flip, self.trainer_pass),
+            "DoubleCoinFlip1": (self.double_coin_flip_reversed, self.trainer_pass),
+            "Slide0": (self.slide, self.trainer_pass),
+            "Slide1": (self.slide_reversed, self.trainer_pass),
+            "SlideTwo0": (self.slide_two, self.trainer_pass),
+            "SlideTwo1": (self.slide_two_reversed, self.trainer_pass),
+            "AnyOne0": (self.any_one, self.trainer_pass),
+            "AnyOne1": (self.any_one_reversed, self.trainer_pass),
+            "SpecificOne0": (self.specific_one, self.trainer_pass),
+            "SpecificOne1": (self.specific_one_reversed, self.trainer_pass),
+            "Switch0": (self.switch, self.trainer_pass),
+            "Switch1": (self.switch_reversed, self.trainer_pass),
+            "Alternate0": (self.alternate, self.trainer_pass),
+            "Alternate1": (self.alternate_reversed, self.trainer_pass),
+            "Button0": (self.button, self.trainer_pass),
+            "Button1": (self.button_reversed, self.trainer_pass),
+            "CombinationTwo0": (self.combination_two, self.trainer_pass),
+            "CombinationTwo1": (self.combination_two_reversed, self.trainer_pass),
+            "CombinationThree0": (self.combination_three, self.trainer_pass),
+            "CombinationThree1": (self.combination_three_reversed, self.trainer_pass),
+            "CombinationFour0": (self.combination_four, self.trainer_pass),
+            "CombinationFour1": (self.combination_four_reversed, self.trainer_pass),
             "AlternateRandomly0": (self.alternate_randomly, self.trainer_alternate_randomly),
             "AlternateRandomly1": (self.alternate_randomly_reversed, self.trainer_alternate_randomly_reversed),
+            "Labyrinth0": (self.labyrinth, self.trainer_pass),
+            "Labyrinth1": (self.labyrinth_reversed, self.trainer_pass),
+            "LabyrinthCoord0": (self.labyrinth, self.trainer_pass),
+            "LabyrinthCoord1": (self.labyrinth_reversed, self.trainer_pass),
         }
         self.sign_bit = self.environment.sign_bit
         self.turn_counter = 0
@@ -63,7 +67,7 @@ class Handcrafted(Agent):
         except TypeError:
             pass
 
-    def trainer_dummy(self, reward: str):
+    def trainer_pass(self, reward: str):
         """Trainer dummy if no training is necessary"""
         pass
 
@@ -204,3 +208,27 @@ class Handcrafted(Agent):
         """Trains agent to act optimally for alternate_randomly_reversed"""
         if reward == "11":
             self.boolean = not self.boolean
+
+    def labyrinth(self, observation: str) -> str:
+        """Returns optimal actions for labyrinth"""
+        self.boolean = not self.boolean
+        if self.boolean:
+            return "10"
+        else:
+            return "11"
+
+    def labyrinth_reversed(self, observation: str) -> str:
+        """Returns optimal actions for labyrinth_reversed"""
+        return "00"
+
+    def labyrinth_coord(self, observation: str) -> str:
+        """Returns optimal actions for labyrinth_coord"""
+        self.boolean = not self.boolean
+        if self.boolean:
+            return "10"
+        else:
+            return "11"
+
+    def labyrinth_coord_reversed(self, observation: str) -> str:
+        """Returns optimal actions for labyrinth_coord_reversed"""
+        return "00"
