@@ -9,36 +9,40 @@ class Handcrafted(Agent):
         """Initiate switch dictionaries for choosing environment appropriate actions"""
         super().__init__(environment)
         self.environment_switch = {
-            "BiasedCoinFlip0": self.biased_coin_flip,
-            "BiasedCoinFlip1": self.biased_coin_flip_reversed,
-            "DoubleCoinFlip0": self.double_coin_flip,
-            "DoubleCoinFlip1": self.double_coin_flip_reversed,
-            "Slide0": self.slide,
-            "Slide1": self.slide_reversed,
-            "SlideTwo0": self.slide_two,
-            "SlideTwo1": self.slide_two_reversed,
-            "AnyOne0": self.any_one,
-            "AnyOne1": self.any_one_reversed,
-            "SpecificOne0": self.specific_one,
-            "SpecificOne1": self.specific_one_reversed,
-            "Switch0": self.switch,
-            "Switch1": self.switch_reversed,
-            "Alternate0": self.alternate,
-            "Alternate1": self.alternate_reversed,
-            "Button0": self.button,
-            "Button1": self.button_reversed,
-            "CombinationTwo0": self.combination_two,
-            "CombinationTwo1": self.combination_two_reversed,
-            "CombinationThree0": self.combination_three,
-            "CombinationThree1": self.combination_three_reversed,
-            "CombinationFour0": self.combination_four,
-            "CombinationFour1": self.combination_four_reversed,
+            "BiasedCoinFlip0": (self.biased_coin_flip, self.trainer_dummy),
+            "BiasedCoinFlip1": (self.biased_coin_flip_reversed, self.trainer_dummy),
+            "DoubleCoinFlip0": (self.double_coin_flip, self.trainer_dummy),
+            "DoubleCoinFlip1": (self.double_coin_flip_reversed, self.trainer_dummy),
+            "Slide0": (self.slide, self.trainer_dummy),
+            "Slide1": (self.slide_reversed, self.trainer_dummy),
+            "SlideTwo0": (self.slide_two, self.trainer_dummy),
+            "SlideTwo1": (self.slide_two_reversed, self.trainer_dummy),
+            "AnyOne0": (self.any_one, self.trainer_dummy),
+            "AnyOne1": (self.any_one_reversed, self.trainer_dummy),
+            "SpecificOne0": (self.specific_one, self.trainer_dummy),
+            "SpecificOne1": (self.specific_one_reversed, self.trainer_dummy),
+            "Switch0": (self.switch, self.trainer_dummy),
+            "Switch1": (self.switch_reversed, self.trainer_dummy),
+            "Alternate0": (self.alternate, self.trainer_dummy),
+            "Alternate1": (self.alternate_reversed, self.trainer_dummy),
+            "Button0": (self.button, self.trainer_dummy),
+            "Button1": (self.button_reversed, self.trainer_dummy),
+            "CombinationTwo0": (self.combination_two, self.trainer_dummy),
+            "CombinationTwo1": (self.combination_two_reversed, self.trainer_dummy),
+            "CombinationThree0": (self.combination_three, self.trainer_dummy),
+            "CombinationThree1": (self.combination_three_reversed, self.trainer_dummy),
+            "CombinationFour0": (self.combination_four, self.trainer_dummy),
+            "CombinationFour1": (self.combination_four_reversed, self.trainer_dummy),
+            "AlternateRandomly0": (self.alternate_randomly, self.trainer_alternate_randomly),
+            "AlternateRandomly1": (self.alternate_randomly_reversed, self.trainer_alternate_randomly_reversed),
         }
         self.sign_bit = self.environment.sign_bit
         self.turn_counter = 0
         self.boolean = True
-        self.method = self.environment_switch.get(self.environment.__class__.__name__ + self.sign_bit)
-        if self.method is None:
+        methods = self.environment_switch.get(self.environment.__class__.__name__ + self.sign_bit)
+        self.calculator = methods[0]
+        self.trainer = methods[1]
+        if self.calculator is None:
             print("!!!")
             print("Handcrafted needs implementation for %s" % self.environment.__class__.__name__)
             print("Implement it and delete the relevant save files in python/resources/data")
@@ -46,11 +50,22 @@ class Handcrafted(Agent):
     def calculate_action(self, observation: str) -> str:
         """Returns handcrafted actions depending on the environment"""
         try:
-            action = self.method(observation)
+            action = self.calculator(observation)
         except TypeError:
             action = "0" * self.environment.action_length
         self.turn_counter += 1
         return action
+
+    def train(self, reward: str):
+        """Trains the environment for optimal actions"""
+        try:
+            self.trainer(reward)
+        except TypeError:
+            pass
+
+    def trainer_dummy(self, reward: str):
+        """Trainer dummy if no training is necessary"""
+        pass
 
     def biased_coin_flip(self, observation: str) -> str:
         """Returns optimal actions for the biased coin flip"""
@@ -167,3 +182,25 @@ class Handcrafted(Agent):
     def combination_four_reversed(self, observation: str) -> str:
         """Returns optimal actions for combination_three_reversed"""
         return "00"
+
+    def alternate_randomly(self, observation: str) -> str:
+        """Returns optimal actions for alternate_randomly"""
+        if self.boolean:
+            return "0"
+        return "1"
+
+    def trainer_alternate_randomly(self, reward: str):
+        """Trains agent to act optimally for alternate_randomly"""
+        if reward == "00":
+            self.boolean = not self.boolean
+
+    def alternate_randomly_reversed(self, observation: str) -> str:
+        """Returns optimal actions for alternate_randomly_reversed"""
+        if self.boolean:
+            return "1"
+        return "0"
+
+    def trainer_alternate_randomly_reversed(self, reward: str):
+        """Trains agent to act optimally for alternate_randomly_reversed"""
+        if reward == "11":
+            self.boolean = not self.boolean
