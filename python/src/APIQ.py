@@ -66,18 +66,23 @@ def apiq():
         for env_name in reward_dict[ag_name]:
             data_path = data_dir_path.joinpath(ag_name + "_" + env_name + ".apiq")
             pickle.dump(reward_dict[ag_name][env_name], data_path.open("wb"))
-    print_list = ["PiRand", "PiBasic", "Pi2Back", "Pi2Forward", "Handcrafted"]
-    print_list.extend([k for k in reward_dict if k not in print_list])
-    for a in print_list:
+    agent_list = ["PiRand", "PiBasic", "Pi2Back", "Pi2Forward", "Handcrafted"]
+    agent_list.extend([k for k in reward_dict if k not in agent_list])
+    Utility.sort_dict(reward_dict, agent_list)
+    environment_list = [k for k in complexity_dict]
+    for a in reward_dict:
+        Utility.sort_dict(reward_dict[a], environment_list)
+    for a in reward_dict:
         print("    {}:".format(a))
-        for e in complexity_dict:
+        for e in reward_dict[a]:
             print("        {:s}: {:.5f}, {:.5f}".format(e, reward_dict[a][e]["0"], reward_dict[a][e]["1"]))
+    reward_dict_path = data_dir_path.joinpath("reward_dict.apiq")
+    pickle.dump(reward_dict, reward_dict_path.open("wb"))
     #    print apiq_dict - PiAgents first, then alphabetically
     print("----------------------------------------")
     print("APIQ:")
-    reward_dict_path = data_dir_path.joinpath("reward_dict.apiq")
-    pickle.dump(reward_dict, reward_dict_path.open("wb"))
-    for a in print_list:
+    Utility.sort_dict(apiq_dict, agent_list)
+    for a in apiq_dict:
         print("    {:s}: {:.5f}".format(a, apiq_dict[a]))
     pickle.dump(apiq_dict, apiq_dict_path.open("wb"))
 

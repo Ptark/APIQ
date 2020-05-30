@@ -92,6 +92,15 @@ def random_action(length: int) -> str:
     return action
 
 
+def sort_dict(dic: dict, keys: list):
+    """Sorts the keys in a dict with a sorted list of the keys. The list must contain only valid keys."""
+    temp_dic = {}
+    for key in keys:
+        temp_dic[key] = dic.pop(key)
+    for key in temp_dic:
+        dic[key] = temp_dic[key]
+
+
 def init_heap(length: int):
     """initialize action heap for pi agents"""
     reward_statistics = []
