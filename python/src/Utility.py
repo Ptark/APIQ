@@ -57,8 +57,13 @@ def get_random_bit() -> int:
 
 
 def get_data_path() -> Path:
-    """Returns resources path."""
+    """Returns data path."""
     return Path(__file__).parent.parent.joinpath('resources/data')
+
+
+def get_plots_path() -> Path:
+    """Returns plots path."""
+    return Path(__file__).parent.parent.joinpath('resources/plots')
 
 
 def is_saved(training_step: int) -> bool:

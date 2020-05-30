@@ -35,21 +35,11 @@ for ag_class in agent_classes:
 
 def apiq():
     """Trials agents in environments and calculates apiq from results"""
+    complexity_dict = calculate_complexities()
+    environment_scaling_factors = calculate_scaling_factors(complexity_dict)
     print("----------------------------------------")
     print("Trialing agents in environments...")
     trials()
-    pprint.pprint(reward_dict)
-    for ag_name in reward_dict:
-        for env_name in reward_dict[ag_name]:
-            data_path = data_dir_path.joinpath(ag_name + "_" + env_name + ".apiq")
-            pickle.dump(reward_dict[ag_name][env_name], data_path.open("wb"))
-    print("----------------------------------------")
-    print("Environment Complexities (Python Bytecode instructions)")
-    environment_complexities = calculate_complexities()
-    pprint.pprint(environment_complexities)
-    environment_scaling_factors = calculate_scaling_factors(environment_complexities)
-    print("----------------------------------------")
-    print("APIQ")
     apiq_dict = {}
     norming_factor = sum(environment_scaling_factors.values())
     for ag_name in reward_dict:
@@ -60,8 +50,35 @@ def apiq():
             ag_apiq += (positive + negative) * environment_scaling_factors[env_name]
         ag_apiq /= norming_factor
         apiq_dict[ag_name] = ag_apiq
-    pprint.pprint(apiq_dict)
+    # sort dictionaries, print them and save them
+    #   sort complexity_dict by complexity
     print("----------------------------------------")
+    print("Complexitiy - Number of Bytecode instructions:")
+    complexity_dict = {k: v for k, v in sorted(complexity_dict.items(), key=lambda item: item[1])}
+    for k in complexity_dict:
+        print("    {:s}: {:d}".format(k, complexity_dict[k]))
+    complexity_dict_path = data_dir_path.joinpath("complexity_dict.apiq")
+    pickle.dump(complexity_dict, complexity_dict_path.open("wb"))
+    #   print reward_dict - PiAgents first, then alphabetically
+    print("----------------------------------------")
+    print("Positive and negative rewards:")
+    for ag_name in reward_dict:
+        for env_name in reward_dict[ag_name]:
+            data_path = data_dir_path.joinpath(ag_name + "_" + env_name + ".apiq")
+            pickle.dump(reward_dict[ag_name][env_name], data_path.open("wb"))
+    print_list = ["PiRand", "PiBasic", "Pi2Back", "Pi2Forward", "Handcrafted"]
+    print_list.extend([k for k in reward_dict if k not in print_list])
+    for a in print_list:
+        print("    {}:".format(a))
+        for e in complexity_dict:
+            print("        {:s}: {:.5f}, {:.5f}".format(e, reward_dict[a][e]["0"], reward_dict[a][e]["1"]))
+    #    print apiq_dict - PiAgents first, then alphabetically
+    print("----------------------------------------")
+    print("APIQ:")
+    reward_dict_path = data_dir_path.joinpath("reward_dict.apiq")
+    pickle.dump(reward_dict, reward_dict_path.open("wb"))
+    for a in print_list:
+        print("    {:s}: {:.5f}".format(a, apiq_dict[a]))
     pickle.dump(apiq_dict, apiq_dict_path.open("wb"))
 
 
@@ -117,6 +134,7 @@ def calculate_complexities() -> dict:
 
 def calculate_scaling_factors(dic: dict) -> dict:
     """Calculates scaling factors for all environments from complexities and saves them in a dictionary"""
+    scaling_factors = {}
     for env_name in dic:
-        dic[env_name] = pow(2, -dic[env_name] / floating_precision_factor)
-    return dic
+        scaling_factors[env_name] = pow(2, -dic[env_name] / floating_precision_factor)
+    return scaling_factors
