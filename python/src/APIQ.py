@@ -1,10 +1,14 @@
 import concurrent.futures
 import importlib
+import math
 import pickle
-import pprint
 from pathlib import Path
 from typing import Type, Tuple
+
+import numpy as np
+
 from python.src import Utility
+from statistics import NormalDist
 
 from python.src.agents.abstract_classes.Agent import Agent
 from python.src.environments.abstract_classes.Environment import Environment
@@ -36,29 +40,40 @@ for ag_class in agent_classes:
 def apiq():
     """Trials agents in environments and calculates apiq from results"""
     complexity_dict = calculate_complexities()
-    environment_scaling_factors = calculate_scaling_factors(complexity_dict)
+    complexity_dict = {k: v for k, v in sorted(complexity_dict.items(), key=lambda item: item[1])}
+    scaling_factor_dict, discrete_distribution, continuous_distribution = calculate_scaling_factors(complexity_dict)
     print("----------------------------------------")
     print("Trialing agents in environments...")
     trials()
     apiq_dict = {}
-    norming_factor = sum(environment_scaling_factors.values())
+    norming_factor = sum(scaling_factor_dict.values())
     for ag_name in reward_dict:
         ag_apiq = 0
         for env_name in reward_dict[ag_name]:
             positive = reward_dict[ag_name][env_name]["0"]
             negative = reward_dict[ag_name][env_name]["1"]
-            ag_apiq += (positive + negative) * environment_scaling_factors[env_name]
+            ag_apiq += (positive + negative) * scaling_factor_dict[env_name]
         ag_apiq /= norming_factor
         apiq_dict[ag_name] = ag_apiq
     # sort dictionaries, print them and save them
     #   sort complexity_dict by complexity
     print("----------------------------------------")
     print("Complexitiy - Number of Bytecode instructions:")
-    complexity_dict = {k: v for k, v in sorted(complexity_dict.items(), key=lambda item: item[1])}
     for k in complexity_dict:
         print("    {:s}: {:d}".format(k, complexity_dict[k]))
     complexity_dict_path = data_dir_path.joinpath("complexity_dict.apiq")
     pickle.dump(complexity_dict, complexity_dict_path.open("wb"))
+    print("----------------------------------------")
+    print("Scaling Factor - Inverse of density function:")
+    for k in scaling_factor_dict:
+        print("    {:s}: {:f}".format(k, scaling_factor_dict[k]))
+    scaling_factor_dict_path = data_dir_path.joinpath("scaling_factor_dict.apiq")
+    pickle.dump(complexity_dict, scaling_factor_dict_path.open("wb"))
+    discrete_distribution_path = data_dir_path.joinpath("discrete_distribution.apiq")
+    pickle.dump(discrete_distribution, discrete_distribution_path.open("wb"))
+    continuous_distribution_path = data_dir_path.joinpath("continuous_distribution.apiq")
+    pickle.dump(continuous_distribution, continuous_distribution_path.open("wb"))
+
     #   print reward_dict - PiAgents first, then alphabetically
     print("----------------------------------------")
     print("Positive and negative rewards:")
@@ -137,9 +152,26 @@ def calculate_complexities() -> dict:
     return environment_complexities
 
 
-def calculate_scaling_factors(dic: dict) -> dict:
-    """Calculates scaling factors for all environments from complexities and saves them in a dictionary"""
-    scaling_factors = {}
-    for env_name in dic:
-        scaling_factors[env_name] = pow(2, -dic[env_name] / floating_precision_factor)
-    return scaling_factors
+def calculate_scaling_factors(complexity_dict: dict) -> Tuple[dict, list, list]:
+    """Calculates scaling factors for all environments from complexities and saves them in a dictionary.
+    Parameters:
+        complexity_dict: The dictionary with the environments as keys and their complexities as values
+    Returns:
+        scaling_factor_dict: Dictionary with environments as keys and their scaling factors as values.
+        discrete_distribution: Discrete distribution of complexity of environments.
+        continuous distribution: Continuous distribution of complexity of environments."""
+    complexities = complexity_dict.values()
+    max_c = max(complexities)
+    min_c = min(complexities)
+    discrete_distribution = [0] * (max_c + 1)
+    for value in complexity_dict.values():
+        discrete_distribution[value] += 1
+    sigma = (max_c - min_c + 1) / len(complexities)
+    normal_distribution = [NormalDist(0, sigma).pdf(x) for x in range(math.floor(-3 * sigma), math.ceil(3 * sigma))]
+    half_len = math.floor(len(normal_distribution) / 2)
+    continuous_distribution = np.convolve(discrete_distribution, normal_distribution)
+    continuous_distribution = continuous_distribution[half_len:-half_len + 1]
+    scaling_factor_dict = {}
+    for k, v in complexity_dict.items():
+        scaling_factor_dict[k] = 1 / continuous_distribution[v]
+    return scaling_factor_dict, discrete_distribution, continuous_distribution

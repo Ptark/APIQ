@@ -27,8 +27,8 @@ f.savefig(apiq_figure_path, bbox_inches='tight')
 
 #
 environments = reward_dict_sorted[next(iter(reward_dict_sorted))]
-colors = Colors.get_colors(len(environments), 0)
-lighter_colors = Colors.get_colors(len(environments), 1)
+colors = Colors.get_colors(len(environments), 1)
+lighter_colors = Colors.get_colors(len(environments), 2)
 positive_rewards = []
 rewards = []
 idx = 0
@@ -42,10 +42,10 @@ for env in environments.keys():
         rewards[idx].append(positive_reward + negative_reward)
     idx += 1
 width = 0.2
-scale = (len(environments) + 2) * width
+scale = (len(environments) + 4) * width
 xpos = np.array([i * scale for i in range(len(reward_dict_sorted.keys()))])
 for i in range(len(positive_rewards)):
-    plt.bar(xpos + width * i, positive_rewards[i], color=lighter_colors[i], width=width)
+    # plt.bar(xpos + width * i, positive_rewards[i], color=lighter_colors[i], width=width)
     plt.bar(xpos + width * i, rewards[i], color=colors[i], width=width)
 plt.xticks(xpos + width * len(positive_rewards) / 2, list(apiq_dict.keys()))
 plt.ylim(0, 1)
