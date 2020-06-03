@@ -166,7 +166,7 @@ def calculate_scaling_factors(complexity_dict: dict) -> Tuple[dict, list, list]:
     discrete_distribution = [0] * (max_c + 1)
     for value in complexity_dict.values():
         discrete_distribution[value] += 1
-    sigma = (max_c - min_c + 1) / len(complexities)
+    sigma = math.sqrt((max_c - min_c + 1) / len(complexities))
     normal_distribution = [NormalDist(0, sigma).pdf(x) for x in range(math.floor(-3 * sigma), math.ceil(3 * sigma))]
     half_len = math.floor(len(normal_distribution) / 2)
     continuous_distribution = np.convolve(discrete_distribution, normal_distribution)
