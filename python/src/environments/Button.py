@@ -15,6 +15,5 @@ class Button(Environment):
         """Returns reward 1 if the action is 1"""
         if action == "1":
             return '', self.sign_bit + "1"
-        else:
-            return '', self.sign_bit + "0"
+        return '', self.sign_bit + "0"
 

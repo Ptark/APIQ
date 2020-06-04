@@ -30,22 +30,30 @@ class NNAgent(Agent):
         reward = -2
         # calculate expected reward by trying every action
         number_of_actions = pow(2, self.environment.action_length)
-        for action_idx in range(number_of_actions):
+        if random.randrange(10) == 0:
+            action_idx = random.randrange(number_of_actions)
             action_string = format(action_idx, 'b').zfill(self.environment.action_length)
             nn_input = NNUtility.bitstr_to_narray(observation + action_string)
             nn_output = self.nn.forward(nn_input)
-            bit_string = NNUtility.narray_to_bitstr(nn_output[1][-1])
-            action_reward = Utility.get_reward_from_bitstring(bit_string)
-            if action_reward == reward:
-                i = random.randint(0, 1)
-                if i == 1:
-                    action = action_string
-                    self.activations = nn_output
-            else:
-                if action_reward > reward:
-                    action = action_string
-                    reward = action_reward
-                    self.activations = nn_output
+            action = action_string
+            self.activations = nn_output
+        else:
+            for action_idx in range(number_of_actions):
+                action_string = format(action_idx, 'b').zfill(self.environment.action_length)
+                nn_input = NNUtility.bitstr_to_narray(observation + action_string)
+                nn_output = self.nn.forward(nn_input)
+                reward_string = NNUtility.narray_to_bitstr(nn_output[1][-1])
+                action_reward = Utility.get_reward_from_bitstring(reward_string)
+                if action_reward == reward:
+                    i = random.randint(0, 1)
+                    if i == 1:
+                        action = action_string
+                        self.activations = nn_output
+                else:
+                    if action_reward > reward:
+                        action = action_string
+                        reward = action_reward
+                        self.activations = nn_output
         return action
 
     def train(self, reward: str):
