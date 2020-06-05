@@ -33,7 +33,7 @@ def drelu(array):
 def bitstr_to_narray(s: str) -> np.ndarray:
     """Turn a bitstring into a numpy array"""
     char_list = list(s)
-    array = np.zeros((len(s), 1), dtype=np.longdouble)
+    array = np.zeros((len(s), 1))
     for idx in range(len(char_list)):
         array[idx, 0] = int(char_list[idx])
     return array
