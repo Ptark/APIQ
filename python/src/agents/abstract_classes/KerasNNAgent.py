@@ -1,11 +1,13 @@
 import random
-
 import numpy as np
-
 from python.src import Utility
 from python.src.agents.abstract_classes.Agent import Agent
 from python.src.agents.neural_networks import NNUtility
 from python.src.environments.abstract_classes.Environment import Environment
+
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+import tensorflow as tf
 from tensorflow.keras import Sequential, Input
 from tensorflow.keras.layers import Dense
 
@@ -27,7 +29,8 @@ class KerasNNAgent(Agent):
         for hidden_layer_size in hidden_size:
             self.nn.add(Dense(hidden_layer_size, activation=activation_name))
         self.nn.add(Dense(output_size, activation=activation_name))
-        self.nn.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
+        with tf.device('/cpu:0'):
+            self.nn.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
         self.nn_input = np.zeros((1, self.environment.observation_length + self.environment.action_length))
 
     def calculate_action(self, observation: str) \
@@ -47,7 +50,8 @@ class KerasNNAgent(Agent):
             for action_idx in range(number_of_actions):
                 action_string = format(action_idx, 'b').zfill(self.environment.action_length)
                 nn_input = NNUtility.bitstr_to_narray(observation + action_string).T
-                nn_output = self.nn.predict(nn_input, batch_size=1)
+                with tf.device('/cpu:0'):
+                    nn_output = self.nn.predict(nn_input, batch_size=1)
                 reward_string = NNUtility.narray_to_bitstr(nn_output)
                 action_reward = Utility.get_reward_from_bitstring(reward_string)
                 if action_reward == reward:
@@ -64,5 +68,6 @@ class KerasNNAgent(Agent):
 
     def train(self, reward: str):
         """Train agent on received reward"""
-        self.nn.fit(self.nn_input, NNUtility.bitstr_to_narray(reward).T, batch_size=1, epochs=1, verbose=0)
+        with tf.device('/cpu:0'):
+            self.nn.fit(self.nn_input, NNUtility.bitstr_to_narray(reward).T, batch_size=1, epochs=1, verbose=0)
 

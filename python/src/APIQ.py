@@ -13,7 +13,7 @@ from statistics import NormalDist
 from python.src.agents.abstract_classes.Agent import Agent
 from python.src.environments.abstract_classes.Environment import Environment
 
-number_of_cycles = 1000000
+number_of_cycles = 100000
 floating_precision_factor = 25
 
 agent_module = importlib.import_module("python.src.agents")
