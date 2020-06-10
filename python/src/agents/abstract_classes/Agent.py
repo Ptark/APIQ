@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Tuple, Type
-
 from python.src.environments.abstract_classes.Environment import Environment
 
 

@@ -1,7 +1,6 @@
 import pickle
 import matplotlib.pyplot as plt
 import numpy as np
-
 from python.src import Utility
 from matplotlib import rc
 rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 12})
@@ -23,7 +22,7 @@ plt.bar(x, continuous_distribution, color='#076678', alpha=.5)
 plt.xlabel("Complexity in python bytecode instructions")
 plt.ylabel("Discrete/Continuous density")
 plt.legend(labels=['Discrete density', 'Continuous density'])
-distributions_figure_path = plots_path.joinpath("distributions.pdf")
+distributions_figure_path = plots_path.joinpath("distribution_figure.pdf")
 f.savefig(distributions_figure_path, bbox_inches='tight')
 plt.show()
 

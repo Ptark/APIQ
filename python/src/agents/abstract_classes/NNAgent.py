@@ -1,6 +1,4 @@
 import random
-from typing import Tuple, Type
-
 from python.src import Utility
 from python.src.agents.abstract_classes.Agent import Agent
 from python.src.agents.neural_networks import NNUtility
@@ -11,7 +9,6 @@ from python.src.environments.abstract_classes.Environment import Environment
 class NNAgent(Agent):
     """Template for neural network based agents"""
 
-    is_trainable = True
     data_dir = Utility.get_data_path()
     learning_rate = 0.01
 
