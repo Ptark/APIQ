@@ -2,6 +2,7 @@ import concurrent.futures
 import importlib
 import math
 import pickle
+import pprint
 from pathlib import Path
 from typing import Type, Tuple
 
@@ -13,7 +14,8 @@ from statistics import NormalDist
 from python.src.agents.abstract_classes.Agent import Agent
 from python.src.environments.abstract_classes.Environment import Environment
 
-number_of_cycles = 100000
+number_of_cycles = 10000
+number_of_trials = 100
 floating_precision_factor = 25
 
 agent_module = importlib.import_module("python.src.agents")
@@ -31,6 +33,8 @@ for ag_class in agent_classes:
     ag = ag_class.__name__
     for env_class in environment_classes:
         env = env_class.__name__
+        Utility.nested_set(reward_dict, [ag, env, "positive", "rewards"], [])
+        Utility.nested_set(reward_dict, [ag, env, "negative", "rewards"], [])
         path = data_dir_path.joinpath(ag + "_" + env + ".apiq")
         if path.is_file():
             rewards = pickle.load(path.open("rb"))
@@ -45,16 +49,30 @@ def apiq():
     print("----------------------------------------")
     print("Trialing agents in environments...")
     trials()
+    for ag_name in reward_dict:
+        for env_name in reward_dict[ag_name]:
+            for sign in ["positive", "negative"]:
+                collected_rewards = reward_dict[ag_name][env_name][sign]["rewards"]
+                reward_dict[ag_name][env_name][sign]["mean"] = np.mean(collected_rewards)
+                reward_dict[ag_name][env_name][sign]["error"] = np.std(collected_rewards, dtype=np.float64, ddof=1)
     apiq_dict = {}
     norming_factor = sum(scaling_factor_dict.values())
     for ag_name in reward_dict:
-        ag_apiq = 0
+        apiq_mean = 0
+        apiq_error = 0
         for env_name in reward_dict[ag_name]:
-            positive = reward_dict[ag_name][env_name]["0"]
-            negative = reward_dict[ag_name][env_name]["1"]
-            ag_apiq += (positive + negative) * scaling_factor_dict[env_name]
-        ag_apiq /= norming_factor
-        apiq_dict[ag_name] = ag_apiq
+            ag_env_dict = reward_dict[ag_name][env_name]
+            factor = scaling_factor_dict[env_name]
+            positive_mean = ag_env_dict["positive"]["mean"]
+            p_err = ag_env_dict["positive"]["error"]
+            negative_mean = ag_env_dict["negative"]["mean"]
+            n_err = ag_env_dict["negative"]["error"]
+            apiq_mean += (positive_mean + negative_mean) * factor
+            apiq_error += (p_err * p_err + n_err * n_err) * factor * factor
+        apiq_mean /= norming_factor
+        apiq_error = np.sqrt(apiq_error) / norming_factor
+        Utility.nested_set(apiq_dict, [ag_name, "mean"], apiq_mean)
+        Utility.nested_set(apiq_dict, [ag_name, "error"], apiq_error)
     # sort dictionaries, print them and save them
     #   sort complexity_dict by complexity
     print("----------------------------------------")
@@ -81,7 +99,8 @@ def apiq():
         for env_name in reward_dict[ag_name]:
             data_path = data_dir_path.joinpath(ag_name + "_" + env_name + ".apiq")
             pickle.dump(reward_dict[ag_name][env_name], data_path.open("wb"))
-    agent_list = ["PiRand", "PiBasic", "Pi2Back", "Pi2Forward", "Handcrafted"]
+    agent_list = ["PiRand", "PiBasic", "Pi2Back", "Pi2Forward", "Handcrafted", "NNsigmoid", "NNsigmoid4", "NNrelu",
+                  "NNrelu4", "NNreluSigmoid", "NNrelu4Sigmoid"]
     agent_list.extend([k for k in reward_dict if k not in agent_list])
     Utility.sort_dict(reward_dict, agent_list)
     environment_list = [k for k in complexity_dict]
@@ -90,7 +109,12 @@ def apiq():
     for a in reward_dict:
         print("    {}:".format(a))
         for e in reward_dict[a]:
-            print("        {:s}: {:.5f}, {:.5f}".format(e, reward_dict[a][e]["0"], reward_dict[a][e]["1"]))
+            temp = reward_dict[a][e]
+            positive = temp["positive"]["mean"]
+            negative = temp["negative"]["mean"]
+            p_err = temp["positive"]["error"]
+            n_err = temp["negative"]["error"]
+            print("        {:s}: {:.5f} +- {:.5f}, {:.5f} +- {:.5f}".format(e, positive, p_err, negative, n_err))
     reward_dict_path = data_dir_path.joinpath("reward_dict.apiq")
     pickle.dump(reward_dict, reward_dict_path.open("wb"))
     #    print apiq_dict - PiAgents first, then alphabetically
@@ -98,7 +122,7 @@ def apiq():
     print("APIQ:")
     Utility.sort_dict(apiq_dict, agent_list)
     for a in apiq_dict:
-        print("    {:s}: {:.5f}".format(a, apiq_dict[a]))
+        print("    {:s}: {:.5f} +- {:.5f}".format(a, apiq_dict[a]["mean"], apiq_dict[a]["error"]))
     pickle.dump(apiq_dict, apiq_dict_path.open("wb"))
 
 
@@ -107,11 +131,15 @@ def trials():
     with concurrent.futures.ProcessPoolExecutor() as executor:
         future_list = []
         for pair in pairs_to_be_trialed():
-            future_list.append(executor.submit(trial_agent_environment, pair, "0"))
-            future_list.append(executor.submit(trial_agent_environment, pair, "1"))
+            for idx in range(number_of_trials):
+                future_list.append(executor.submit(trial_agent_environment, pair, "0"))
+                future_list.append(executor.submit(trial_agent_environment, pair, "1"))
+        idx = 1
         for future in concurrent.futures.as_completed(future_list):
-            ag_name, env_name, reward, sign_bit = future.result()
-            Utility.nested_set(reward_dict, [ag_name, env_name, sign_bit], reward)
+            ag_name, env_name, reward, sign = future.result()
+            reward_dict[ag_name][env_name][sign]["rewards"].append(reward)
+            print("    {:d}/{:d} done.".format(idx, len(future_list)))
+            idx += 1
 
 
 def trial_agent_environment(pair: Tuple[Type[Agent], Type[Environment]], sign_bit: str) -> Tuple[str, str, float, str]:
@@ -127,8 +155,8 @@ def trial_agent_environment(pair: Tuple[Type[Agent], Type[Environment]], sign_bi
         total_reward += Utility.get_reward_from_bitstring(reward)
         agent.train(reward)
     total_reward /= number_of_cycles * environment_class.max_average_reward_per_cycle
-    print("    %s in %s done." % (agent_class.__name__, environment_class.__name__))
-    return agent_class.__name__, environment_class.__name__, total_reward, sign_bit
+    sign = "positive" if sign_bit == "0" else "negative"
+    return agent_class.__name__, environment_class.__name__, total_reward, sign
 
 
 def pairs_to_be_trialed() -> set:
@@ -138,7 +166,7 @@ def pairs_to_be_trialed() -> set:
         ag_name = agent_class.__name__
         reward_dict.setdefault(ag_name, {})
         for environment_class in environment_classes:
-            if environment_class.__name__ not in reward_dict[ag_name]:
+            if len(reward_dict[ag_name][environment_class.__name__]["positive"]["rewards"]) == 0:
                 agent_environment_pairs.add((agent_class, environment_class))
     return agent_environment_pairs
 
