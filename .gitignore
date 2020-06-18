@@ -1,5 +1,9 @@
 .idea/*
 *.pyc
 python/src/agents/__pycache__/
-*.apiq
-python/resources/plots/
+apiq_dict.apiq
+complexity_dict.apiq
+discrete_distribution.apiq
+continuous_distribution.apiq
+reward_dict.apiq
+scaling_factor_dict.apiq
