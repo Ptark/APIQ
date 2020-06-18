@@ -22,6 +22,6 @@ def get_colors(length: int) -> list:
     incr = int(number_of_colors / 2 + 1)
     for i in range(length):
         wheel_idx = incr * i % number_of_colors
-        color_list.append(colors[keys[wheel_idx]][int(i / number_of_colors) % 3])
+        color_list.append(colors[keys[wheel_idx]][i % 3])
     return color_list
 
