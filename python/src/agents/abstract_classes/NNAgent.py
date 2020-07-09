@@ -1,4 +1,3 @@
-import random
 from python.src import Utility
 from python.src.agents.abstract_classes.Agent import Agent
 from python.src.agents.neural_networks import NNUtility
@@ -27,8 +26,8 @@ class NNAgent(Agent):
         reward = -2
         # calculate expected reward by trying every action
         number_of_actions = pow(2, self.environment.action_length)
-        if self.seeded_rand_range(10) == 0:
-            action_idx = self.seeded_rand_range(number_of_actions)
+        if self.seeded_rand_range(0, 10) == 0:
+            action_idx = self.seeded_rand_range(0, number_of_actions)
             action_string = format(action_idx, 'b').zfill(self.environment.action_length)
             nn_input = NNUtility.bitstr_to_narray(observation + action_string)
             nn_output = self.nn.forward(nn_input)

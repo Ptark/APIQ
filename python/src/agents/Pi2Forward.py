@@ -41,8 +41,8 @@ class Pi2Forward(Agent):
         self.sl_a = self.l_a
         self.l_a = self.a
         action_heap = self.table[self.l_o][self.l_a][self.o]
-        if self.seeded_rand_range(10) == 0:
-            idx = self.seeded_rand_range(self.table[self.l_o][self.l_a][self.o])
+        if self.seeded_rand_range(0, 10) == 0:
+            idx = self.seeded_rand_range(0, len(self.table[self.l_o][self.l_a][self.o]))
             self.a = action_heap[idx][1][:self.environment.action_length]
         else:
             self.a = action_heap[0][1][:self.environment.action_length]

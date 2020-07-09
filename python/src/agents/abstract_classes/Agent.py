@@ -1,6 +1,5 @@
+import random
 from abc import ABC, abstractmethod
-from random import random
-
 from python.src.environments.abstract_classes.Environment import Environment
 
 

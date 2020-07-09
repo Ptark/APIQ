@@ -3,6 +3,7 @@ import math
 import pickle
 import numpy as np
 import importlib
+from datetime import datetime
 from pathlib import Path
 from python.src import Utility, HelperFunctions
 from statistics import NormalDist
@@ -69,6 +70,7 @@ for agent_class in agent_classes:
             agent_environment_pairs.add((agent_class, environment_class))
 
 # parallel execution of trials of agents in environments
+time_start = datetime.now()
 print("----------------------------------------")
 print("Trialing agents in environments...")
 with concurrent.futures.ProcessPoolExecutor() as executor:
@@ -82,6 +84,7 @@ with concurrent.futures.ProcessPoolExecutor() as executor:
         reward_dict[ag_name][env_name][sign]["rewards"] = rewards
         print("    {:d}/{:d} done.".format(idx, len(future_list)))
         idx += 1
+time_end = datetime.now()
 
 # calculate mean and std of rewards and add them to reward dictionary
 for ag_name in reward_dict:
@@ -141,6 +144,7 @@ for ag_name in reward_dict:
 # sort, print and save reward dict
 print("----------------------------------------")
 print("Positive and negative rewards:")
+print(time_end - time_start)
 agent_list = ["PiRand", "PiBasic", "Pi2Back", "Pi2Forward", "Handcrafted", "NNsigmoid", "NNsigmoid4", "NNrelu",
               "NNrelu4", "NNreluSigmoid", "NNrelu4Sigmoid"]
 agent_list.extend([k for k in reward_dict if k not in agent_list])

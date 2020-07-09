@@ -42,12 +42,12 @@ def trial_agent_environment(pair: Tuple[Type[Agent], Type[Environment]], sign_bi
     ag_name, env_name = agent_class.__name__, environment_class.__name__
     rewards = []
     sign = "positive" if sign_bit == "0" else "negative"
-    for cyc_idx in range(number_of_trials):
+    for trial_idx in range(number_of_trials):
         total_reward = 0
         environment = environment_class(sign_bit)
         agent = agent_class(environment=environment)
         observation = "0" * environment.observation_length
-        for i in range(number_of_cycles):
+        for cycle_idx in range(number_of_cycles):
             action = agent.calculate_action(observation)
             observation, reward = environment.calculate_percept(action)
             total_reward += Utility.get_reward_from_bitstring(reward)

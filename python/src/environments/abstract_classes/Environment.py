@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from random import random
+import random
 from typing import Tuple
 
 
