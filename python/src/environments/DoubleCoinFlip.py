@@ -1,7 +1,4 @@
 from typing import Tuple
-
-import random
-
 from python.src.environments.abstract_classes.Environment import Environment
 
 
@@ -18,8 +15,8 @@ class DoubleCoinFlip(Environment):
 
     def calculate_percept(self, action: str) -> Tuple[str, str]:
         """Takes a prediction, throws two coins and returns observation and reward"""
-        outcome_one = random.randint(0, 1)
-        outcome_two = random.randint(0, 1)
+        outcome_one = self.get_random_bit()
+        outcome_two = self.get_random_bit()
         prediction = 0
         prediction += int(action[-1])
         prediction += int(action[-2])

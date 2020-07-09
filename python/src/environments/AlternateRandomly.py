@@ -1,4 +1,3 @@
-import random
 from typing import Tuple
 from python.src.environments.abstract_classes.Environment import Environment
 
@@ -19,7 +18,7 @@ class AlternateRandomly(Environment):
 
     def calculate_percept(self, action: str) -> Tuple[str, str]:
         """Returns 1 if the correct action is sent. The correct action flips with 6.25% chance"""
-        flip = random.randint(0, 1) + random.randint(0, 1) + random.randint(0, 1) + random.randint(0, 1)
+        flip = self.get_random_bit() + self.get_random_bit() + self.get_random_bit() + self.get_random_bit()
         if flip == 0:
             self.zero = not self.zero
         if (self.zero and action == "0") or (not self.zero and action == "1"):

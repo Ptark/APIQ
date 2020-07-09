@@ -1,5 +1,4 @@
 import heapq
-import random
 from python.src import Utility
 from python.src.agents.abstract_classes.Agent import Agent
 from python.src.environments.abstract_classes.Environment import Environment
@@ -28,8 +27,8 @@ class Pi2Back(Agent):
             h = last_observation last_action observation"""
         self.l_o = self.o
         self.o = observation
-        if random.randrange(0, 10) == 0:
-            idx = random.randrange(0, len(self.table[self.l_o][self.l_a][self.o]))
+        if self.seeded_rand_range(10) == 0:
+            idx = self.seeded_rand_range(len(self.table[self.l_o][self.l_a][self.o]))
             self.l_a = self.action_statistic[1]
             self.action_statistic = self.table[self.l_o][self.l_a][self.o].pop(idx)
             heapq.heapify(self.table[self.l_o][self.l_a][self.o])

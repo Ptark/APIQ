@@ -1,5 +1,4 @@
 import heapq
-import random
 from python.src import Utility
 from python.src.agents.abstract_classes.Agent import Agent
 from python.src.environments.abstract_classes.Environment import Environment
@@ -18,8 +17,8 @@ class PiBasic(Agent):
         """ 10% of the time return random action.
             90% of the time return action with most expected reward for observation"""
         self.observation = observation
-        if random.randrange(0, 10) == 0:
-            idx = random.randrange(0, len(self.table[observation]))
+        if self.seeded_rand_range(10) == 0:
+            idx = self.seeded_rand_range(self.table[observation])
             self.action_statistic = self.table[observation].pop(idx)
             heapq.heapify(self.table[observation])
             return self.action_statistic[1]

@@ -1,6 +1,5 @@
 import random
-
-from agents.neural_networks.NeuralNetworkSigmoid import NeuralNetworkSigmoid
+from python.src.agents.neural_networks.NeuralNetworkSigmoid import NeuralNetworkSigmoid
 from python.src import Utility
 from python.src.agents.abstract_classes.Agent import Agent
 from python.src.agents.neural_networks import NNUtility
@@ -28,8 +27,8 @@ class NNAgentSigmoid(Agent):
         reward = -2
         # calculate expected reward by trying every action
         number_of_actions = pow(2, self.environment.action_length)
-        if random.randrange(10) == 0:
-            action_idx = random.randrange(number_of_actions)
+        if self.seeded_rand_range(10) == 0:
+            action_idx = self.seeded_rand_range(number_of_actions)
             action_string = format(action_idx, 'b').zfill(self.environment.action_length)
             nn_input = NNUtility.bitstr_to_narray(observation + action_string)
             nn_output = self.nn.forward(nn_input)
@@ -43,7 +42,7 @@ class NNAgentSigmoid(Agent):
                 reward_string = NNUtility.narray_to_bitstr(nn_output[1][-1])
                 action_reward = Utility.get_reward_from_bitstring(reward_string)
                 if action_reward == reward:
-                    i = random.randint(0, 1)
+                    i = self.seeded_rand_range()
                     if i == 1:
                         action = action_string
                         self.activations = nn_output

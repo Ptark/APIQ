@@ -1,31 +1,12 @@
-import dis
 import heapq
 import time
 import math
 from pathlib import Path
 import random
-from typing import Callable
-
-from python.src.environments.abstract_classes.Environment import Environment
 
 randomness_complexity = 25
 
-
-def calculate_complexity(environment: Environment) -> float:
-    """Estimate complexity of an environment depending on its calculate_action method and use of random.
-    Complexity is measured in bytecode instructions.
-    One instruction has 2 byte.
-    """
-    complexity = method_complexity(environment.calculate_percept)
-    if environment.has_randomness:
-        complexity += randomness_complexity
-    return complexity
-
-
-def method_complexity(method: Callable) -> float:
-    """Estimate complexity of a method by counting bytecode instructions"""
-    bytecode = dis.Bytecode(method).dis()
-    return len([line for line in bytecode.splitlines() if line])
+"""File with utility functions for agents and environments to use."""
 
 
 def get_reward_from_bitstring(s: str) -> float:
@@ -150,6 +131,3 @@ def heapq_siftup(heap, pos):
     # to its final resting place (by sifting its parents down).
     heap[pos] = newitem
     heapq_siftdown(heap, startpos, pos)
-
-
-

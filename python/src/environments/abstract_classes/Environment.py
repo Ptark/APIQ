@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from random import random
 from typing import Tuple
 
 
@@ -14,6 +15,7 @@ class Environment(ABC):
     @abstractmethod
     def __init__(self, sign_bit: str):
         self.sign_bit = sign_bit
+        self.seed = sum([ord(c) for c in self.__class__.__name__])
 
     @abstractmethod
     def calculate_percept(self, action: str) \
@@ -22,3 +24,9 @@ class Environment(ABC):
         Has to return a percept which consists of:
         percept = (observation, reward)"""
         pass
+
+    def get_random_bit(self) -> int:
+        """Returns a seeded random bit and increments internal seed"""
+        random.seed(self.seed)
+        self.seed += 1
+        return random.randint(0, 1)
