@@ -35,23 +35,26 @@ def calculate_complexity(environment: Environment) -> float:
     return complexity
 
 
-def trial_agent_environment(pair: Tuple[Type[Agent], Type[Environment]], sign_bit: str,
-                            number_of_trials: int = 100, number_of_cycles: int = 10000) -> Tuple[str, str, str, list]:
+def trial(pair: Tuple[Type[Agent], Type[Environment]], sign_bit: str, num_trials: int = 100,
+          num_cycles: int = 10000, seed: int = 1) -> Tuple[str, str, str, list]:
     """Trial agent in environment"""
     agent_class, environment_class = pair[0], pair[1]
     ag_name, env_name = agent_class.__name__, environment_class.__name__
     rewards = []
     sign = "positive" if sign_bit == "0" else "negative"
-    for trial_idx in range(number_of_trials):
+    a, m = 16807, (pow(2, 31) - 1)
+    for trial_idx in range(num_trials):
         total_reward = 0
-        environment = environment_class(sign_bit)
-        agent = agent_class(environment=environment)
+        environment = environment_class(sign_bit, seed=seed)
+        seed = (seed * a) % m
+        agent = agent_class(environment=environment, seed=seed)
+        seed = (seed * a) % m
         observation = "0" * environment.observation_length
-        for cycle_idx in range(number_of_cycles):
+        for cycle_idx in range(num_cycles):
             action = agent.calculate_action(observation)
             observation, reward = environment.calculate_percept(action)
             total_reward += Utility.get_reward_from_bitstring(reward)
             agent.train(reward)
-        total_reward /= number_of_cycles * environment_class.max_average_reward_per_cycle
+        total_reward /= num_cycles * environment_class.max_average_reward_per_cycle
         rewards.append(total_reward)
     return ag_name, env_name, sign, rewards

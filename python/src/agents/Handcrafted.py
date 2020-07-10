@@ -5,9 +5,9 @@ from python.src.environments.abstract_classes.Environment import Environment
 class Handcrafted(Agent):
     """Models an agent which takes handcrafted actions depending on environments"""
 
-    def __init__(self, environment: Environment):
+    def __init__(self, environment: Environment, seed: int):
         """Initiate switch dictionaries for choosing environment appropriate actions"""
-        super().__init__(environment)
+        super().__init__(environment, seed)
         self.environment_switch = {
             "BiasedCoinFlip0": (self.biased_coin_flip, self.trainer_pass),
             "BiasedCoinFlip1": (self.biased_coin_flip_reversed, self.trainer_pass),

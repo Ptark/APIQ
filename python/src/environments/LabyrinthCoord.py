@@ -13,8 +13,8 @@ class LabyrinthCoord(Environment):
     action_length = 2
     max_average_reward_per_cycle = 1/6
 
-    def __init__(self, sign_bit: str = "0"):
-        super().__init__(sign_bit)
+    def __init__(self, sign_bit: str = "0", seed: int = 1):
+        super().__init__(sign_bit, seed)
         self.coord = [0, 0]
 
     def calculate_percept(self, action: str) -> Tuple[str, str]:

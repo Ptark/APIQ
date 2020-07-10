@@ -11,9 +11,9 @@ class NNAgent(Agent):
     data_dir = Utility.get_data_path()
     learning_rate = 0.01
 
-    def __init__(self, environment: Environment, hidden_size: [int], activation_name: str = "relu"):
+    def __init__(self, environment: Environment, seed: int, hidden_size: [int], activation_name: str = "relu"):
         """Load appropriate parameters depending on environment and learning time"""
-        super().__init__(environment)
+        super().__init__(environment, seed)
         input_size = [self.environment.observation_length + self.environment.action_length]
         output_size = [self.environment.reward_length]
         self.nn = NeuralNetwork(activation_name, input_size + hidden_size + output_size)

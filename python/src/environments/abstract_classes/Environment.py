@@ -13,9 +13,9 @@ class Environment(ABC):
     max_average_reward_per_cycle = 1
 
     @abstractmethod
-    def __init__(self, sign_bit: str):
+    def __init__(self, sign_bit: str, seed: int = 1):
         self.sign_bit = sign_bit
-        self.seed = sum([ord(c) for c in self.__class__.__name__])
+        self.seed = seed
 
     @abstractmethod
     def calculate_percept(self, action: str) \

@@ -8,8 +8,8 @@ class Pi2Forward(Agent):
     """The agent keeping a table with statistics depending on the last observation
     and the next possible actions"""
 
-    def __init__(self, environment: Environment):
-        super().__init__(environment)
+    def __init__(self, environment: Environment, seed: int):
+        super().__init__(environment, seed)
         self.cnt = 0
         a_length = self.environment.action_length
         o_length = self.environment.observation_length

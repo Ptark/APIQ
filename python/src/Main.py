@@ -75,9 +75,13 @@ print("----------------------------------------")
 print("Trialing agents in environments...")
 with concurrent.futures.ProcessPoolExecutor() as executor:
     future_list = []
+    seed = 1
+    a, m = 48271, (pow(2, 31) - 1)
     for pair in agent_environment_pairs:
-        future_list.append(executor.submit(HelperFunctions.trial_agent_environment, pair, "0", num_trials, num_cycles))
-        future_list.append(executor.submit(HelperFunctions.trial_agent_environment, pair, "1", num_trials, num_cycles))
+        future_list.append(executor.submit(HelperFunctions.trial, pair, "0", num_trials, num_cycles, seed))
+        seed = (seed * a) % m
+        future_list.append(executor.submit(HelperFunctions.trial, pair, "1", num_trials, num_cycles, seed))
+        seed = (seed * a) % m
     idx = 1
     for future in concurrent.futures.as_completed(future_list):
         ag_name, env_name, sign, rewards = future.result()

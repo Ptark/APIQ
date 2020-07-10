@@ -8,8 +8,8 @@ class Pi2Back(Agent):
     """The agent keeping a table with reward statistics depending on the
     last observation and action"""
 
-    def __init__(self, environment: Environment):
-        super().__init__(environment)
+    def __init__(self, environment: Environment, seed: int):
+        super().__init__(environment, seed)
         a_length = self.environment.action_length
         o_length = self.environment.observation_length
         self.table = self.init_table()

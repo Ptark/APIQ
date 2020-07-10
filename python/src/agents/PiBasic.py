@@ -7,8 +7,8 @@ from python.src.environments.abstract_classes.Environment import Environment
 class PiBasic(Agent):
     """The basic agent keeping a table with observation - action - reward statistics"""
 
-    def __init__(self, environment: Environment):
-        super().__init__(environment)
+    def __init__(self, environment: Environment, seed: int):
+        super().__init__(environment, seed)
         self.table = self.init_table()
         self.observation = "0" * self.environment.observation_length
         self.action_statistic = (0, "0" * self.environment.action_length, 0)

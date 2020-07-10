@@ -12,8 +12,8 @@ class AlternateRandomly(Environment):
     max_average_reward_per_cycle = 1
     has_randomness = True
 
-    def __init__(self, sign_bit: str = "0"):
-        super().__init__(sign_bit)
+    def __init__(self, sign_bit: str = "0", seed: int = 1):
+        super().__init__(sign_bit, seed)
         self.zero = True
 
     def calculate_percept(self, action: str) -> Tuple[str, str]:

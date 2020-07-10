@@ -7,9 +7,9 @@ class Agent(ABC):
     """Abstract class models an agent"""
 
     @abstractmethod
-    def __init__(self, environment: Environment):
+    def __init__(self, environment: Environment, seed: int = 1):
         self.environment = environment
-        self.seed = sum([ord(c) for c in self.__class__.__name__])
+        self.seed = seed
 
     @abstractmethod
     def calculate_action(self, observation: str) -> str:

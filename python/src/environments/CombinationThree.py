@@ -10,8 +10,8 @@ class CombinationThree(Environment):
     action_length = 2
     max_average_reward_per_cycle = 1/3
 
-    def __init__(self, sign_bit: str = "0"):
-        super().__init__(sign_bit)
+    def __init__(self, sign_bit: str = "0", seed: int = 1):
+        super().__init__(sign_bit, seed)
         self.lock_one = False
         self.lock_two = False
 
