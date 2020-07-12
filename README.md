@@ -11,4 +11,5 @@ Environments and agents communicate via bitstrings.
 
 New environments and agents can be added easily. They need to implement their respective abstract classes Environment.py or Agent.py and be dropped into python/src/environments/ and python/src/agents/
 
+Requirements are Python 3.8 and numpy.
 Running python/src/Main.py will then trial new agents in all environments and all agents in new environments and calculate their APIQ from the results.
