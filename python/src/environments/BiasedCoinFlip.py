@@ -14,7 +14,7 @@ class BiasedCoinFlip(Environment):
         super().__init__(sign_bit, seed)
 
     def calculate_percept(self, action: str) -> Tuple[str, str]:
-        """Takes a prediction, throws a coin with 30% chance for heads (0) and returns observation and reward"""
+        """Takes a prediction, throws a coin with 25% chance for heads (0) and returns observation and reward"""
         outcome = self.get_random_bit() + self.get_random_bit()
         outcome = 0 if outcome == 0 else 1
         if int(action[-1]) == outcome:

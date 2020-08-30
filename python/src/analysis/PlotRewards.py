@@ -60,7 +60,7 @@ for label in ax.yaxis.get_majorticklabels():
     label.set_transform(label.get_transform() + offset)
 ax.set_xticks([-0.5, 0.0, 0.5, 1.0])
 ax.set_xticks([-0.5, 0.0, 0.5, 1.0], minor=True)
-ax.set_xlabel("Mean reward in environment and negation")
+ax.set_xlabel("Measured mean reward in environment and negation")
 ax.grid(which='minor', color='black')
 ax.xaxis.grid(True, which='major')
 legend = [key for key in environments.keys()] + ["Error bars"]
@@ -95,7 +95,7 @@ for label in ax.yaxis.get_majorticklabels():
     label.set_transform(label.get_transform() + offset)
 ax.set_xticks([-0.5, 0.0, 0.5, 1.0])
 ax.set_xticks([-0.5, 0.0, 0.5, 1.0], minor=True)
-ax.set_xlabel("Mean reward in environment and negation")
+ax.set_xlabel("Measured mean reward in environment and negation")
 ax.grid(which='minor', color='black')
 ax.xaxis.grid(True, which='major')
 reward_figure_path = plots_path.joinpath("reward_figure2.pdf")
